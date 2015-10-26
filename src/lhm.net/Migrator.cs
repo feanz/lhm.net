@@ -38,6 +38,11 @@ namespace lhm.net
             Ddl("ALTER TABLE {0} Add {1} {2}", Name, columnName, type);
         }
 
+        public void RemoveColumn(string columnName)
+        {
+            Ddl("ALTER TABLE {0} DROP COLUMN {1}", Name, columnName);
+        }
+
         private void Ddl(string format, params object[] args)
         {
             _statements.Add(string.Format(format, args));

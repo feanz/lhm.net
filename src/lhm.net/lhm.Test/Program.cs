@@ -12,6 +12,16 @@ namespace lhm.Test
             {
                 migrator.AddColumn("IsSuspended", "bit");
             });
+
+            Lhm.ChangeTable("User", migrator =>
+            {
+                migrator.AddColumn("DateOfBirth", "DateTime2");
+            });
+
+            Lhm.ChangeTable("User", migrator =>
+            {
+                migrator.RemoveColumn("DateOfBirth");
+            });
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Text.RegularExpressions;
 using Dapper;
 
 namespace lhm.net
@@ -15,6 +16,7 @@ namespace lhm.net
         private readonly Table _origin;
         private readonly Table _destination;
         private readonly Intersection _intersection;
+        private readonly string _timestamp;
 
         public Entangler(TableMigration migration, IDbConnection connection)
         {
@@ -22,6 +24,8 @@ namespace lhm.net
             _intersection = migration.Intersection;
             _origin = migration.Origin;
             _destination = migration.Destination;
+            _timestamp = migration.DateTimeStamp;
+
         }
 
         public void Run()
@@ -44,36 +48,36 @@ namespace lhm.net
 
         private string CreateInsertTrigger()
         {
-            return string.Format(@"CREATE TRIGGER {0}_Insert ON [{0}] 
+            return string.Format(@"CREATE TRIGGER {0}_Insert_{1} ON [{0}] 
                                     AFTER INSERT 
                                     AS 
                                     BEGIN
-                                        SET IDENTITY_INSERT [{1}] ON
-                                        Insert into {1} ({2}) select {2} from inserted
-                                    END", _origin.Name, _destination.Name, _intersection.Insert);
+                                        SET IDENTITY_INSERT [{2}] ON
+                                        Insert into {2} ({3}) select {3} from inserted
+                                    END", _origin.Name, _timestamp, _destination.Name, _intersection.Insert);
         }
 
         private string CreateUpdateTrigger()
         {
-            return string.Format(@"CREATE TRIGGER {0}_Update ON [{0}] 
+            return string.Format(@"CREATE TRIGGER {0}_Update_{1} ON [{0}] 
                                     AFTER Update 
                                     AS 
                                     BEGIN 
-                                        Update [{1}] SET 
-                                        {2}
-                                        FROM [{1}]
-                                        INNER JOIN INSERTED ON [{1}].[{3}] = INSERTED.[{3}]
-                                    END", _origin.Name, _destination.Name, _intersection.Updates, _destination.PrimaryKey);
+                                        Update [{2}] SET 
+                                        {3}
+                                        FROM [{2}]
+                                        INNER JOIN INSERTED ON [{2}].[{4}] = INSERTED.[{4}]
+                                    END", _origin.Name, _timestamp, _destination.Name, _intersection.Updates, _destination.PrimaryKey);
         }
 
         private string CreateDeleteTrigger()
         {
-            return string.Format(@"CREATE TRIGGER [{0}_Delete] ON [{0}] 
+            return string.Format(@"CREATE TRIGGER [{0}_Delete_{1}] ON [{0}] 
                                     AFTER DELETE 
                                     AS 
                                     BEGIN
-                                        DELETE FROM [{1}] WHERE {2} IN (SELECT {2} FROM DELETED)
-                                    END", _origin.Name, _destination.Name, _destination.PrimaryKey);
+                                        DELETE FROM [{2}] WHERE {3} IN (SELECT {3} FROM DELETED)
+                                    END", _origin.Name, _timestamp, _destination.Name, _destination.PrimaryKey);
         }
     }
 }
