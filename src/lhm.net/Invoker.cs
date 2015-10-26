@@ -51,6 +51,8 @@ namespace lhm.net
             {
                 //todo create alternate switcher
             }
+
+            Logger.Info("Finished LHM run on table " + _migrator.Name);
         }
 
         private MigrationOptions ConfigureOptions(MigrationOptions options)

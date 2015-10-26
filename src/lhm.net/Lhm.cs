@@ -2,6 +2,8 @@
 using System.Data;
 using System.Data.SqlClient;
 using lhm.net.Throttler;
+using Serilog;
+using Serilog.Configuration;
 using YourRootNamespace.Logging;
 
 namespace lhm.net
@@ -20,6 +22,14 @@ namespace lhm.net
             get { return _defaultThrottler; }
         }
 
+        static Lhm()
+        {
+            Log.Logger = new LoggerConfiguration()
+                .WriteTo
+                .LiterateConsole(outputTemplate: "{Timestamp:HH:MM} [{Level}] ({Name:l}){NewLine} {Message}{NewLine}{Exception}")
+                .CreateLogger();
+        }
+
         public static void Setup(string connectionString)
         {
             _connectionString = connectionString;
@@ -30,7 +40,8 @@ namespace lhm.net
             _defaultThrottler = throttler;
         }
 
-        public static void ChangeTable(string tableName, Action<Migrator> configMigration, MigrationOptions options = null)
+        public static void ChangeTable(string tableName, Action<Migrator> configMigration,
+            MigrationOptions options = null)
         {
             try
             {

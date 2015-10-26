@@ -3,6 +3,7 @@ using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Data;
 using Dapper;
+using YourRootNamespace.Logging;
 
 namespace lhm.net
 {
@@ -12,6 +13,7 @@ namespace lhm.net
     /// </summary>
     public class Migrator
     {
+        private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
         private readonly Table _origin;
         private readonly IDbConnection _connection;
         private readonly List<string> _statements;
@@ -49,9 +51,13 @@ namespace lhm.net
         {
             CreateDestinationTables();
 
-            foreach (var statement in _statements)
+            Logger.Info(string.Format("Applying migrations to table:{0}", Name));
+
+            foreach (var migration in _statements)
             {
-                _connection.Execute(statement);
+                Logger.InfoFormat(string.Format("Applying migration to table:{0} Migration:{1}", Name, migration));
+
+                _connection.Execute(migration);
             }
 
             return new TableMigration(_origin, ReadDestination(), _dateTimeStamp);
@@ -59,6 +65,8 @@ namespace lhm.net
 
         private void CreateDestinationTables()
         {
+            Logger.Info(string.Format("Creating destination table:{0}", Name));
+
             var builder = new TravelAgent(_origin, _connection, _dateTimeStamp);
 
             builder.PrepareDestination();
