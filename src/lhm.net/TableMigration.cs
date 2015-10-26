@@ -30,6 +30,11 @@ namespace lhm.net
             get { return string.Format("{0}_lhma_{1}", _origin.Name, _dateTimeStamp); }
         }
 
+        public string DateTimeStamp
+        {
+            get { return _dateTimeStamp; }
+        }
+
         public Intersection Intersection
         {
             get
