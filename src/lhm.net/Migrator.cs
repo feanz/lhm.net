@@ -15,6 +15,7 @@ namespace lhm.net
         private readonly Table _origin;
         private readonly IDbConnection _connection;
         private readonly List<string> _statements;
+        private List<ColumnMapping> _columnMappings; 
         private readonly string _dateTimeStamp;
 
         public Migrator(Table origin, IDbConnection connection)
@@ -22,6 +23,7 @@ namespace lhm.net
             _origin = origin;
             _connection = connection;
             _statements = new List<string>();
+            _columnMappings = new List<ColumnMapping>();
             _dateTimeStamp = DateTime.UtcNow.ToString(Constants.DateFormat);
         }
 
@@ -38,6 +40,12 @@ namespace lhm.net
         public void RemoveColumn(string columnName)
         {
             Ddl("ALTER TABLE {0} DROP COLUMN {1}", Name, columnName);
+        }
+
+        public void RenameColumn(string oldColumnName, string newColumnName)
+        {
+            Ddl("EXEC sp_rename '{0}.{1}', '{2}', 'COLUMN'", Name, oldColumnName, newColumnName);
+            _columnMappings.Add(new ColumnMapping{OldColumnName = oldColumnName, NewColumnName = newColumnName});
         }
 
         private void Ddl(string format, params object[] args)

@@ -20,6 +20,15 @@ namespace lhm.net
             _intersect = _origin.Columns.Intersect(_destination.Columns).ToList();
         }
 
+        public Intersection(Table origin, Table destination, List<ColumnMapping> columnMappings)
+        {
+            //todo this will need to hold column renames as well
+            _origin = origin;
+            _destination = destination;
+            _intersect = _origin.Columns.Intersect(_destination.Columns).ToList();
+            columnMappings.ForEach(cm => _intersect.AddRange(_origin.Columns.Where(cl => cl.Name == cm.OldColumnName)));
+        }
+
         public string Insert
         {
             get { return string.Join(", ", _intersect.Select(info => string.Format("[{0}]", info.Name))); }

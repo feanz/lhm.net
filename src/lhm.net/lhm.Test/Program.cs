@@ -7,21 +7,11 @@ namespace lhm.Test
     {
         static void Main(string[] args)
         {
-            Lhm.Setup("Server=(localdb)\\v11.0;;Initial Catalog=Lhm.Test;Integrated Security=True");
+            Lhm.Setup("Server=localhost;;Initial Catalog=Lhm.Test;Integrated Security=True");
 
             Lhm.ChangeTable("User", migrator =>
             {
-                migrator.AddColumn("IsSuspended", "bit");
-            });
-
-            Lhm.ChangeTable("User", migrator =>
-            {
-                migrator.AddColumn("DateOfBirth", "DateTime2");
-            });
-
-            Lhm.ChangeTable("User", migrator =>
-            {
-                migrator.RemoveColumn("DateOfBirth");
+                migrator.RenameColumn("Telephone", "ContactNo");
             });
 
             Console.ReadLine();
