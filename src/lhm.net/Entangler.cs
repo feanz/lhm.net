@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Text.RegularExpressions;
 using Dapper;
+using lhm.net.Logging;
 
 namespace lhm.net
 {
@@ -12,6 +13,8 @@ namespace lhm.net
     /// </summary>
     public class Entangler
     {
+        private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
+
         private readonly IDbConnection _connection;
         private readonly Table _origin;
         private readonly Table _destination;
@@ -30,10 +33,14 @@ namespace lhm.net
 
         public void Run()
         {
+            Logger.Info(string.Format("Creating triggers between: {0} and {1}", _origin.Name, _destination.Name));
+
             foreach (var entangle in Entanglers)
             {
                 _connection.Execute(entangle());
             }
+
+            Logger.Info(string.Format("Finished creating triggers between {0} and {1}", _origin.Name, _destination.Name));
         }
 
         public IEnumerable<Func<string>> Entanglers

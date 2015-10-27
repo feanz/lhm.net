@@ -1,12 +1,14 @@
-﻿using System;
-using System.Data;
+﻿using System.Data;
 using Dapper;
+using lhm.net.Logging;
 using lhm.net.Throttler;
 
 namespace lhm.net
 {
     public class Chunker
     {
+        private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
+
         private readonly TableMigration _migration;
         private readonly IDbConnection _connection;
         private readonly IThrottler _throttler;
@@ -26,7 +28,7 @@ namespace lhm.net
 
             int rowsAffected;
 
-            //todo log start
+            Logger.Info(string.Format("Starting to copy data from: {0} to {1}", _migration.Origin.Name, _migration.Destination.Name));
 
             do
             {
@@ -37,12 +39,12 @@ namespace lhm.net
                     _throttler.Run();
                 }
 
-                //todo log details here
+                Logger.Info(string.Format("Copied batch of {0} rows", rowsAffected));
                 nextToInsert += stride;
 
             } while (rowsAffected > 0);
 
-            //todo log end
+            Logger.Info(string.Format("Finsihed copying data from: {0} to {1} rows copied:{2}", _migration.Origin.Name, _migration.Destination.Name, rowsAffected));
         }
 
         private int Copy(int skip, int take)
@@ -55,7 +57,7 @@ namespace lhm.net
                     OFFSET @skip ROWS FETCH NEXT @take ROWS ONLY;
                   SELECT @@RowCount", _migration.Destination.Name, _migration.Intersection.Insert, _migration.Origin.Name, _migration.Origin.PrimaryKey);
 
-            return _connection.Execute(sql, new {skip, take });
+            return _connection.Execute(sql, new { skip, take });
         }
     }
 }

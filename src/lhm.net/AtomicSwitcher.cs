@@ -1,10 +1,13 @@
 ﻿using System.Data;
 using Dapper;
+using lhm.net.Logging;
 
 namespace lhm.net
 {
     public class AtomicSwitcher
     {
+        private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
+
         private readonly TableMigration _migration;
         private readonly IDbConnection _connection;
 
@@ -17,6 +20,8 @@ namespace lhm.net
 
         public void Run()
         {
+            Logger.Info(string.Format("Renaming origin table {0} to archive table {1}", _migration.Origin.Name, _migration.ArchiveName));
+
             var sql = string.Format(@"DECLARE @TranName VARCHAR(20);
                                       SELECT @TranName = 'LHM_Rename_Table';
                                       BEGIN TRANSACTION @TranName;
