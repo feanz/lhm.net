@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Text.RegularExpressions;
 using Dapper;
 
 namespace lhm.net
@@ -53,8 +52,8 @@ namespace lhm.net
                                     AS 
                                     BEGIN
                                         SET IDENTITY_INSERT [{2}] ON
-                                        Insert into {2} ({3}) select {3} from inserted
-                                    END", _origin.Name, _timestamp, _destination.Name, _intersection.Insert);
+                                        Insert into {2} ({3}) select {4} from inserted
+                                    END", _origin.Name, _timestamp, _destination.Name, _intersection.InsertForDestination, _intersection.InsertForOrigin);
         }
 
         private string CreateUpdateTrigger()
@@ -67,7 +66,7 @@ namespace lhm.net
                                         {3}
                                         FROM [{2}]
                                         INNER JOIN INSERTED ON [{2}].[{4}] = INSERTED.[{4}]
-                                    END", _origin.Name, _timestamp, _destination.Name, _intersection.Updates, _destination.PrimaryKey);
+                                    END", _origin.Name, _timestamp, _destination.Name, _intersection.UpdatesForDestination, _destination.PrimaryKey);
         }
 
         private string CreateDeleteTrigger()
