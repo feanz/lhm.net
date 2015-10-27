@@ -56,6 +56,7 @@
     <Compile Include="AtomicSwitcher.cs" />
     <Compile Include="Chunker.cs" />
     <Compile Include="ColumnInfo.cs" />
+    <Compile Include="Constants.cs" />
     <Compile Include="Entangler.cs" />
     <Compile Include="IndexInfo.cs" />
     <Compile Include="Intersection.cs" />
@@ -69,6 +70,7 @@
     <Compile Include="TableMigration.cs" />
     <Compile Include="Throttler\IThrottler.cs" />
     <Compile Include="Throttler\TimeThrottler.cs" />
+    <Compile Include="TravelAgent.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Lhm.Test.sql" />
