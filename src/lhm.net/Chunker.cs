@@ -1,8 +1,7 @@
-﻿using System;
-using System.Data;
+﻿using System.Data;
 using Dapper;
+using lhm.net.Logging;
 using lhm.net.Throttler;
-using YourRootNamespace.Logging;
 
 namespace lhm.net
 {
@@ -58,7 +57,7 @@ namespace lhm.net
                     OFFSET @skip ROWS FETCH NEXT @take ROWS ONLY;
                   SELECT @@RowCount", _migration.Destination.Name, _migration.Intersection.Insert, _migration.Origin.Name, _migration.Origin.PrimaryKey);
 
-            return _connection.Execute(sql, new {skip, take });
+            return _connection.Execute(sql, new { skip, take });
         }
     }
 }

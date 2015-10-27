@@ -1,9 +1,9 @@
-﻿//===============================================================================
+//===============================================================================
 // LibLog
 //
 // https://github.com/damianh/LibLog
 //===============================================================================
-// Copyright © 2011-2015 Damian Hickey.  All rights reserved.
+// Copyright Â© 2011-2015 Damian Hickey.  All rights reserved.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -31,32 +31,26 @@
 // Define LIBLOG_PUBLIC to enable ability to GET a logger (LogProvider.For<>() etc) from outside this library. NOTE:
 // this can have unintended consequences of consumers of your library using your library to resolve a logger. If the
 // reason is because you want to open this functionality to other projects within your solution,
-// consider [InternalsVisibleTo] instead.
+// consider [InternalVisibleTo] instead.
 // 
 // Define LIBLOG_PROVIDERS_ONLY if your library provides its own logging API and you just want to use the
 // LibLog providers internally to provide built in support for popular logging frameworks.
 
 #pragma warning disable 1591
 
-using System.Diagnostics.CodeAnalysis;
-
-[assembly: SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Scope = "namespace", Target = "YourRootNamespace.Logging")]
-[assembly: SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Scope = "member", Target = "YourRootNamespace.Logging.Logger.#Invoke(YourRootNamespace.Logging.LogLevel,System.Func`1<System.String>,System.Exception,System.Object[])")]
-
 // If you copied this file manually, you need to change all "YourRootNameSpace" so not to clash with other libraries
 // that use LibLog
 #if LIBLOG_PROVIDERS_ONLY
-namespace YourRootNamespace.LibLog
+namespace lhm.net.LibLog
 #else
-namespace YourRootNamespace.Logging
+namespace lhm.net.Logging
 #endif
 {
     using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
 #if LIBLOG_PROVIDERS_ONLY
-    using YourRootNamespace.LibLog.LogProviders;
+    using lhm.net.LibLog.LogProviders;
 #else
-    using YourRootNamespace.Logging.LogProviders;
+    using lhm.net.Logging.LogProviders;
 #endif
     using System;
 #if !LIBLOG_PROVIDERS_ONLY
@@ -71,7 +65,7 @@ namespace YourRootNamespace.Logging
 #else
     public
 #endif
- delegate bool Logger(LogLevel logLevel, Func<string> messageFunc, Exception exception = null, params object[] formatParameters);
+    delegate bool Logger(LogLevel logLevel, Func<string> messageFunc, Exception exception = null, params object[] formatParameters);
 
 #if !LIBLOG_PROVIDERS_ONLY
     /// <summary>
@@ -82,7 +76,7 @@ namespace YourRootNamespace.Logging
 #else
     internal
 #endif
- interface ILog
+    interface ILog
     {
         /// <summary>
         /// Log a message the specified log level.
@@ -98,7 +92,7 @@ namespace YourRootNamespace.Logging
         /// 
         /// To check IsEnabled call Log with only LogLevel and check the return value, no event will be written.
         /// </remarks>
-        bool Log(LogLevel logLevel, Func<string> messageFunc, Exception exception = null, params object[] formatParameters);
+        bool Log(LogLevel logLevel, Func<string> messageFunc, Exception exception = null, params object[] formatParameters );
     }
 #endif
 
@@ -110,7 +104,7 @@ namespace YourRootNamespace.Logging
 #else
     public
 #endif
- enum LogLevel
+    enum LogLevel
     {
         Trace,
         Debug,
@@ -126,7 +120,7 @@ namespace YourRootNamespace.Logging
 #else
     internal
 #endif
- static partial class LogExtensions
+    static partial class LogExtensions
     {
         public static bool IsDebugEnabled(this ILog logger)
         {
@@ -386,7 +380,7 @@ namespace YourRootNamespace.Logging
 #else
     public
 #endif
- interface ILogProvider
+    interface ILogProvider
     {
         /// <summary>
         /// Gets the specified named logger.
@@ -419,20 +413,19 @@ namespace YourRootNamespace.Logging
 #else
     public
 #endif
- static class LogProvider
+    static class LogProvider
     {
 #if !LIBLOG_PROVIDERS_ONLY
         /// <summary>
         /// The disable logging environment variable. If the environment variable is set to 'true', then logging
         /// will be disabled.
         /// </summary>
-        public const string DisableLoggingEnvironmentVariable = "$rootnamespace$_LIBLOG_DISABLE";
+        public const string DisableLoggingEnvironmentVariable = "lhm.net_LIBLOG_DISABLE";
         private const string NullLogProvider = "Current Log Provider is not set. Call SetCurrentLogProvider " +
                                                "with a non-null value first.";
         private static dynamic s_currentLogProvider;
         private static Action<ILogProvider> s_onCurrentLogProviderSet;
 
-        [SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline")]
         static LogProvider()
         {
             IsDisabled = false;
@@ -490,7 +483,7 @@ namespace YourRootNamespace.Logging
 #else
         internal
 #endif
- static ILog For<T>()
+        static ILog For<T>()
         {
             return GetLogger(typeof(T));
         }
@@ -506,7 +499,7 @@ namespace YourRootNamespace.Logging
 #else
         internal
 #endif
- static ILog GetCurrentClassLogger()
+        static ILog GetCurrentClassLogger()
         {
             var stackFrame = new StackFrame(1, false);
             return GetLogger(stackFrame.GetMethod().DeclaringType);
@@ -523,7 +516,7 @@ namespace YourRootNamespace.Logging
 #else
         internal
 #endif
- static ILog GetLogger(Type type)
+        static ILog GetLogger(Type type)
         {
             return GetLogger(type.FullName);
         }
@@ -538,10 +531,10 @@ namespace YourRootNamespace.Logging
 #else
         internal
 #endif
- static ILog GetLogger(string name)
+        static ILog GetLogger(string name)
         {
             ILogProvider logProvider = CurrentLogProvider ?? ResolveLogProvider();
-            return logProvider == null
+            return logProvider == null 
                 ? NoOpLogger.Instance
                 : (ILog)new LoggerExecutionWrapper(logProvider.GetLogger(name), () => IsDisabled);
         }
@@ -551,15 +544,14 @@ namespace YourRootNamespace.Logging
         /// </summary>
         /// <param name="message">A message.</param>
         /// <returns>An <see cref="IDisposable"/> that closes context when disposed.</returns>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "SetCurrentLogProvider")]
 #if LIBLOG_PUBLIC
         public
 #else
         internal
 #endif
- static IDisposable OpenNestedContext(string message)
+        static IDisposable OpenNestedContext(string message)
         {
-            if (CurrentLogProvider == null)
+            if(CurrentLogProvider == null)
             {
                 throw new InvalidOperationException(NullLogProvider);
             }
@@ -572,13 +564,12 @@ namespace YourRootNamespace.Logging
         /// <param name="key">A key.</param>
         /// <param name="value">A value.</param>
         /// <returns>An <see cref="IDisposable"/> that closes context when disposed.</returns>
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "SetCurrentLogProvider")]
 #if LIBLOG_PUBLIC
         public
 #else
         internal
 #endif
- static IDisposable OpenMappedContext(string key, string value)
+        static IDisposable OpenMappedContext(string key, string value)
         {
             if (CurrentLogProvider == null)
             {
@@ -591,24 +582,24 @@ namespace YourRootNamespace.Logging
 #if LIBLOG_PROVIDERS_ONLY
     private
 #else
-        internal
+    internal
 #endif
- delegate bool IsLoggerAvailable();
+    delegate bool IsLoggerAvailable();
 
 #if LIBLOG_PROVIDERS_ONLY
     private
 #else
-        internal
+    internal
 #endif
- delegate ILogProvider CreateLogProvider();
+    delegate ILogProvider CreateLogProvider();
 
 #if LIBLOG_PROVIDERS_ONLY
     private
 #else
-        internal
+    internal
 #endif
- static readonly List<Tuple<IsLoggerAvailable, CreateLogProvider>> LogProviderResolvers =
-                new List<Tuple<IsLoggerAvailable, CreateLogProvider>>
+    static readonly List<Tuple<IsLoggerAvailable, CreateLogProvider>> LogProviderResolvers =
+            new List<Tuple<IsLoggerAvailable, CreateLogProvider>>
         {
             new Tuple<IsLoggerAvailable, CreateLogProvider>(SerilogLogProvider.IsLoggerAvailable, () => new SerilogLogProvider()),
             new Tuple<IsLoggerAvailable, CreateLogProvider>(NLogLogProvider.IsLoggerAvailable, () => new NLogLogProvider()),
@@ -627,8 +618,6 @@ namespace YourRootNamespace.Logging
         }
 #endif
 
-        [SuppressMessage("Microsoft.Globalization", "CA1303:Do not pass literals as localized parameters", MessageId = "System.Console.WriteLine(System.String,System.Object,System.Object)")]
-        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         internal static ILogProvider ResolveLogProvider()
         {
             try
@@ -648,7 +637,7 @@ namespace YourRootNamespace.Logging
 #else
                 Console.WriteLine(
 #endif
-"Exception occurred resolving a log provider. Logging for this assembly {0} is disabled. {1}",
+                    "Exception occurred resolving a log provider. Logging for this assembly {0} is disabled. {1}",
                     typeof(LogProvider).GetAssemblyPortable().FullName,
                     ex);
             }
@@ -686,7 +675,6 @@ namespace YourRootNamespace.Logging
             get { return _logger; }
         }
 
-        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         public bool Log(LogLevel logLevel, Func<string> messageFunc, Exception exception = null, params object[] formatParameters)
         {
             if (_getIsDisabled())
@@ -726,14 +714,13 @@ namespace YourRootNamespace.Logging
 }
 
 #if LIBLOG_PROVIDERS_ONLY
-namespace YourRootNamespace.LibLog.LogProviders
+namespace lhm.net.LibLog.LogProviders
 #else
-namespace YourRootNamespace.Logging.LogProviders
+namespace lhm.net.Logging.LogProviders
 #endif
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
 #if !LIBLOG_PORTABLE
     using System.Diagnostics;
 #endif
@@ -757,7 +744,7 @@ namespace YourRootNamespace.Logging.LogProviders
 
         protected LogProviderBase()
         {
-            _lazyOpenNdcMethod
+            _lazyOpenNdcMethod 
                 = new Lazy<OpenNdc>(GetOpenNdcMethod);
             _lazyOpenMdcMethod
                = new Lazy<OpenMdc>(GetOpenMdcMethod);
@@ -791,8 +778,6 @@ namespace YourRootNamespace.Logging.LogProviders
         private readonly Func<string, object> _getLoggerByNameDelegate;
         private static bool s_providerIsAvailableOverride = true;
 
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "LogManager")]
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "NLog")]
         public NLogLogProvider()
         {
             if (!IsLoggerAvailable())
@@ -876,7 +861,6 @@ namespace YourRootNamespace.Logging.LogProviders
                 _logger = logger;
             }
 
-            [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
             public bool Log(LogLevel logLevel, Func<string> messageFunc, Exception exception, params object[] formatParameters)
             {
                 if (messageFunc == null)
@@ -885,7 +869,7 @@ namespace YourRootNamespace.Logging.LogProviders
                 }
                 messageFunc = LogMessageFormatter.SimulateStructuredLogging(messageFunc, formatParameters);
 
-                if (exception != null)
+                if(exception != null)
                 {
                     return LogException(logLevel, messageFunc, exception);
                 }
@@ -937,7 +921,6 @@ namespace YourRootNamespace.Logging.LogProviders
                 return false;
             }
 
-            [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity")]
             private bool LogException(LogLevel logLevel, Func<string> messageFunc, Exception exception)
             {
                 switch (logLevel)
@@ -1014,7 +997,6 @@ namespace YourRootNamespace.Logging.LogProviders
         private readonly Func<string, object> _getLoggerByNameDelegate;
         private static bool s_providerIsAvailableOverride = true;
 
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "LogManager")]
         public Log4NetLogProvider()
         {
             if (!IsLoggerAvailable())
@@ -1103,7 +1085,6 @@ namespace YourRootNamespace.Logging.LogProviders
             private readonly Func<object, object, bool> _isEnabledForDelegate;
             private readonly Action<object, Type, object, string, Exception> _logDelegate;
 
-            [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "ILogger")]
             internal Log4NetLogger(dynamic logger)
             {
                 _logger = logger.Logger;
@@ -1203,7 +1184,7 @@ namespace YourRootNamespace.Logging.LogProviders
                 return true;
             }
 
-            private static bool IsInTypeHierarchy(Type currentType, Type checkType)
+            private bool IsInTypeHierarchy(Type currentType, Type checkType)
             {
                 while (currentType != null && currentType != typeof(object))
                 {
@@ -1254,11 +1235,10 @@ namespace YourRootNamespace.Logging.LogProviders
         private static readonly Action<string, string, int> WriteLogEntry;
         private static readonly Func<string, int, bool> ShouldLogEntry;
 
-        [SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline")]
         static EntLibLogProvider()
         {
-            LogEntryType = Type.GetType(string.Format(CultureInfo.InvariantCulture, TypeTemplate, "LogEntry"));
-            LoggerType = Type.GetType(string.Format(CultureInfo.InvariantCulture, TypeTemplate, "Logger"));
+            LogEntryType = Type.GetType(string.Format(TypeTemplate, "LogEntry"));
+            LoggerType = Type.GetType(string.Format(TypeTemplate, "Logger"));
             TraceEventTypeType = TraceEventTypeValues.Type;
             if (LogEntryType == null
                  || TraceEventTypeType == null
@@ -1270,7 +1250,6 @@ namespace YourRootNamespace.Logging.LogProviders
             ShouldLogEntry = GetShouldLogEntry();
         }
 
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "EnterpriseLibrary")]
         public EntLibLogProvider()
         {
             if (!IsLoggerAvailable())
@@ -1345,17 +1324,17 @@ namespace YourRootNamespace.Logging.LogProviders
             Expression severityParameter, ParameterExpression logNameParameter)
         {
             var entryType = LogEntryType;
-            MemberInitExpression memberInit = Expression.MemberInit(Expression.New(entryType),
+            MemberInitExpression memberInit = Expression.MemberInit(Expression.New(entryType), 
                 Expression.Bind(entryType.GetPropertyPortable("Message"), message),
                 Expression.Bind(entryType.GetPropertyPortable("Severity"), severityParameter),
                 Expression.Bind(
                     entryType.GetPropertyPortable("TimeStamp"),
-                    Expression.Property(null, typeof(DateTime).GetPropertyPortable("UtcNow"))),
+                    Expression.Property(null, typeof (DateTime).GetPropertyPortable("UtcNow"))),
                 Expression.Bind(
                     entryType.GetPropertyPortable("Categories"),
                     Expression.ListInit(
-                        Expression.New(typeof(List<string>)),
-                        typeof(List<string>).GetMethodPortable("Add", typeof(string)),
+                        Expression.New(typeof (List<string>)),
+                        typeof (List<string>).GetMethodPortable("Add", typeof (string)),
                         logNameParameter)));
             return memberInit;
         }
@@ -1423,7 +1402,6 @@ namespace YourRootNamespace.Logging.LogProviders
         private readonly Func<string, object> _getLoggerByNameDelegate;
         private static bool s_providerIsAvailableOverride = true;
 
-        [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "Serilog")]
         public SerilogLogProvider()
         {
             if (!IsLoggerAvailable())
@@ -1463,7 +1441,7 @@ namespace YourRootNamespace.Logging.LogProviders
         {
             Type ndcContextType = Type.GetType("Serilog.Context.LogContext, Serilog.FullNetFx");
             MethodInfo pushPropertyMethod = ndcContextType.GetMethodPortable(
-                "PushProperty",
+                "PushProperty", 
                 typeof(string),
                 typeof(object),
                 typeof(bool));
@@ -1479,7 +1457,7 @@ namespace YourRootNamespace.Logging.LogProviders
                     valueParam,
                     destructureObjectParam)
                 .Compile();
-
+            
             return (key, value) => pushProperty(key, value, false);
         }
 
@@ -1523,11 +1501,6 @@ namespace YourRootNamespace.Logging.LogProviders
             private static readonly Action<object, object, string, object[]> Write;
             private static readonly Action<object, object, Exception, string, object[]> WriteException;
 
-            [SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
-            [SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline")]
-            [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "ILogger")]
-            [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "LogEventLevel")]
-            [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "Serilog")]
             static SerilogLogger()
             {
                 var logEventLevelType = Type.GetType("Serilog.Events.LogEventLevel, Serilog");
@@ -1568,7 +1541,7 @@ namespace YourRootNamespace.Logging.LogProviders
                     messageParam,
                     propertyValuesParam);
                 var expression = Expression.Lambda<Action<object, object, string, object[]>>(
-                    writeMethodExp,
+                    writeMethodExp, 
                     instanceParam,
                     levelParam,
                     messageParam,
@@ -1577,7 +1550,7 @@ namespace YourRootNamespace.Logging.LogProviders
 
                 // Action<object, object, string, Exception> WriteException =
                 // (logger, level, exception, message) => { ((ILogger)logger).Write(level, exception, message, new object[]); }
-                MethodInfo writeExceptionMethodInfo = loggerType.GetMethodPortable("Write",
+                MethodInfo writeExceptionMethodInfo = loggerType.GetMethodPortable("Write", 
                     logEventLevelType,
                     typeof(Exception),
                     typeof(string),
@@ -1591,7 +1564,7 @@ namespace YourRootNamespace.Logging.LogProviders
                     messageParam,
                     propertyValuesParam);
                 WriteException = Expression.Lambda<Action<object, object, Exception, string, object[]>>(
-                    writeMethodExp,
+                    writeMethodExp, 
                     instanceParam,
                     levelParam,
                     exceptionParam,
@@ -1782,7 +1755,7 @@ namespace YourRootNamespace.Logging.LogProviders
 
             MethodInfo method = logManagerType.GetMethodPortable(
                 "Write",
-                logMessageSeverityType, typeof(string), typeof(int), typeof(Exception), typeof(bool),
+                logMessageSeverityType, typeof(string), typeof(int), typeof(Exception), typeof(bool), 
                 logWriteModeType, typeof(string), typeof(string), typeof(string), typeof(string), typeof(object[]));
 
             var callDelegate = (WriteDelegate)method.CreateDelegate(typeof(WriteDelegate));
@@ -1824,7 +1797,7 @@ namespace YourRootNamespace.Logging.LogProviders
                 return true;
             }
 
-            private static int ToLogMessageSeverity(LogLevel logLevel)
+            private int ToLogMessageSeverity(LogLevel logLevel)
             {
                 switch (logLevel)
                 {
@@ -1856,7 +1829,6 @@ namespace YourRootNamespace.Logging.LogProviders
         internal static readonly int Error;
         internal static readonly int Critical;
 
-        [SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline")]
         static TraceEventTypeValues()
         {
             var assembly = typeof(Uri).GetAssemblyPortable(); // This is to get to the System.dll assembly in a PCL compatible way.
@@ -1902,7 +1874,7 @@ namespace YourRootNamespace.Logging.LogProviders
                 foreach (Match match in Pattern.Matches(targetMessage))
                 {
                     int notUsed;
-                    if (!int.TryParse(match.Value.Substring(1, match.Value.Length - 2), out notUsed))
+                    if (!int.TryParse(match.Value.Substring(1, match.Value.Length -2), out notUsed))
                     {
                         targetMessage = ReplaceFirst(targetMessage, match.Value,
                             "{" + argumentIndex++ + "}");
@@ -2017,7 +1989,7 @@ namespace YourRootNamespace.Logging.LogProviders
 
         public void Dispose()
         {
-            if (_onDispose != null)
+            if(_onDispose != null)
             {
                 _onDispose();
             }

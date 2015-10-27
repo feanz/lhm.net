@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlClient;
+using lhm.net.Logging;
 using lhm.net.Throttler;
 using Serilog;
-using Serilog.Configuration;
-using YourRootNamespace.Logging;
 
 namespace lhm.net
 {

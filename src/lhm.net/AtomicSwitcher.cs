@@ -1,6 +1,6 @@
 ﻿using System.Data;
 using Dapper;
-using YourRootNamespace.Logging;
+using lhm.net.Logging;
 
 namespace lhm.net
 {

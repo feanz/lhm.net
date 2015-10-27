@@ -1,9 +1,8 @@
 ﻿using System;
-using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Data;
 using Dapper;
-using YourRootNamespace.Logging;
+using lhm.net.Logging;
 
 namespace lhm.net
 {
