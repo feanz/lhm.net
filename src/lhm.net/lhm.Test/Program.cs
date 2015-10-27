@@ -1,4 +1,5 @@
-﻿using lhm.net;
+﻿using System;
+using lhm.net;
 
 namespace lhm.Test
 {
@@ -22,6 +23,8 @@ namespace lhm.Test
             {
                 migrator.RemoveColumn("DateOfBirth");
             });
+
+            Console.ReadLine();
         }
     }
 }
