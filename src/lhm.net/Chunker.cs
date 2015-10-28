@@ -52,10 +52,10 @@ namespace lhm.net
             var sql = string.Format(
                 @"SET IDENTITY_INSERT [{0}] ON
                    INSERT INTO {0} ({1}) 
-                    SELECT {1} FROM [{2}]
-                    ORDER BY {3} 
+                    SELECT {2} FROM [{3}]
+                    ORDER BY {4} 
                     OFFSET @skip ROWS FETCH NEXT @take ROWS ONLY;
-                  SELECT @@RowCount", _migration.Destination.Name, _migration.Intersection.Insert, _migration.Origin.Name, _migration.Origin.PrimaryKey);
+                  SELECT @@RowCount", _migration.Destination.Name, _migration.Intersection.InsertForDestination, _migration.Intersection.InsertForOrigin, _migration.Origin.Name, _migration.Origin.PrimaryKey);
 
             return _connection.Execute(sql, new { skip, take });
         }

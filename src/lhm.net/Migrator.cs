@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using Dapper;
 using lhm.net.Logging;
 
@@ -16,6 +17,7 @@ namespace lhm.net
         private readonly Table _origin;
         private readonly IDbConnection _connection;
         private readonly List<string> _statements;
+        private List<RenameMap> _renameMaps; 
         private readonly string _dateTimeStamp;
 
         public Migrator(Table origin, IDbConnection connection)
@@ -23,6 +25,7 @@ namespace lhm.net
             _origin = origin;
             _connection = connection;
             _statements = new List<string>();
+            _renameMaps = new List<RenameMap>();
             _dateTimeStamp = DateTime.UtcNow.ToString(Constants.DateFormat);
         }
 
@@ -41,6 +44,12 @@ namespace lhm.net
             Ddl("ALTER TABLE {0} DROP COLUMN {1}", Name, columnName);
         }
 
+        public void RenameColumn(string oldColumnName, string newColumnName)
+        {
+            Ddl("EXEC sp_rename '{0}.{1}', '{2}', 'COLUMN'", Name, oldColumnName, newColumnName);
+            _renameMaps.Add(new RenameMap(oldColumnName, newColumnName));
+        }
+
         private void Ddl(string format, params object[] args)
         {
             _statements.Add(string.Format(format, args));
@@ -57,6 +66,11 @@ namespace lhm.net
                 Logger.InfoFormat(string.Format("Applying migration to table:{0} Migration:{1}", Name, migration));
 
                 _connection.Execute(migration);
+            }
+
+            if (_renameMaps.Any())
+            {
+                return new TableMigration(_origin, ReadDestination(), _dateTimeStamp, _renameMaps);
             }
 
             return new TableMigration(_origin, ReadDestination(), _dateTimeStamp);

@@ -69,6 +69,8 @@
     <Compile Include="Chunker.cs" />
     <Compile Include="ColumnInfo.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="ColumnInfoMap.cs" />
+    <Compile Include="RenameMap.cs" />
     <Compile Include="Entangler.cs" />
     <Compile Include="IndexInfo.cs" />
     <Compile Include="Intersection.cs" />

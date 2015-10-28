@@ -10,28 +10,71 @@ namespace lhm.net
     {
         private readonly Table _origin;
         private readonly Table _destination;
-        private readonly List<ColumnInfo> _intersect;
+        private readonly List<ColumnInfoMap> _intersect;
 
         public Intersection(Table origin, Table destination)
         {
-            //todo this will need to hold column renames as well
             _origin = origin;
             _destination = destination;
-            _intersect = _origin.Columns.Intersect(_destination.Columns).ToList();
+            _intersect = PopulateIntersects(new List<RenameMap>());
         }
 
-        public string Insert
+        public Intersection(Table origin, Table destination, IEnumerable<RenameMap> renameMaps)
         {
-            get { return string.Join(", ", _intersect.Select(info => string.Format("[{0}]", info.Name))); }
+            _origin = origin;
+            _destination = destination;
+
+            _intersect = PopulateIntersects(renameMaps);
         }
 
-        public string Updates
+        public string InsertForOrigin
+        {
+
+            get { return string.Join(", ", _intersect.Select(info => string.Format("[{0}]", info.OriginColumnInfo.Name))); }
+        }
+
+        public string InsertForDestination
+        {
+
+            get { return string.Join(", ", _intersect.Select(info => string.Format("[{0}]", info.DestinationColumnInfo.Name))); }
+        }
+
+        public string UpdatesForOrigin
         {
             get
             {
-                var statement = string.Join("\n", _intersect.Where(info => info.IsIdentity == false).Select(info => string.Format("[{0}].[{1}] = INSERTED.{1},", _destination.Name, info.Name)));
+                var statement = string.Join("\n", _intersect.Where(info => info.OriginColumnInfo.IsIdentity == false).Select(info => string.Format("[{0}].[{1}] = INSERTED.{1},", _origin.Name, info.OriginColumnInfo.Name)));
                 return statement.TrimEnd(',');
             }
+        }
+
+        public string UpdatesForDestination
+        {
+            get
+            {
+                var statement = string.Join("\n", _intersect.Where(info => info.DestinationColumnInfo.IsIdentity == false).Select(info => string.Format("[{0}].[{1}] = INSERTED.{2},", _destination.Name, info.DestinationColumnInfo.Name, info.OriginColumnInfo.Name)));
+                return statement.TrimEnd(',');
+            }
+        }
+
+        private List<ColumnInfoMap> PopulateIntersects(IEnumerable<RenameMap> renameMaps)
+        {
+            var intersect = _origin.Columns.Intersect(_destination.Columns).SelectMany(x =>
+            {
+                var destColumn = _destination.Columns.Single(y => y.Name == x.Name);
+                var origColumn = _origin.Columns.Single(y => y.Name == x.Name);
+                var columnInfoMapping = new ColumnInfoMap(origColumn, destColumn);
+
+                return new List<ColumnInfoMap> { columnInfoMapping };
+
+            }).ToList();
+
+            intersect.AddRange(from renameMap in renameMaps 
+                               let destColumn = _destination.Columns.Single(y => y.Name == renameMap.NewColumnName) 
+                               let origColumn = _origin.Columns.Single(y => y.Name == renameMap.OldColumnName) 
+                               select new ColumnInfoMap(origColumn, destColumn));
+
+            return intersect;
         }
     }
 }

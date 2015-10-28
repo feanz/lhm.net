@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace lhm.net
 {
@@ -7,12 +9,21 @@ namespace lhm.net
         private readonly Table _origin;
         private readonly Table _destination;
         private readonly string _dateTimeStamp;
+        private readonly List<RenameMap> _columnMappings;
 
         public TableMigration(Table origin, Table destination, string dateTimeStamp)
         {
             _origin = origin;
             _destination = destination;
             _dateTimeStamp = dateTimeStamp;
+            _columnMappings = new List<RenameMap>();
+        }
+        public TableMigration(Table origin, Table destination, string dateTimeStamp, List<RenameMap> columnMappings)
+        {
+            _origin = origin;
+            _destination = destination;
+            _dateTimeStamp = dateTimeStamp;
+            _columnMappings = columnMappings;
         }
 
         public Table Origin
@@ -39,6 +50,11 @@ namespace lhm.net
         {
             get
             {
+                if (_columnMappings.Any())
+                {
+                    return new Intersection(Origin, Destination, _columnMappings);
+                }
+                
                 return new Intersection(Origin, Destination);
             }
         }
