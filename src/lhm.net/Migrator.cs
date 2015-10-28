@@ -52,15 +52,15 @@ namespace lhm.net
 
         public void AddIndex(string indexName, bool isUnique, IndexDef indexDef)
         {
-            InternalAddIndex(indexName, isUnique, indexDef.ToString());
+            AddIndex(indexName, isUnique, indexDef.ToString());
         }
 
-        public void AddCompoundIndex(string indexName, bool isUnique, params IndexDef[] indexInfo)
+        public void AddIndex(string indexName, bool isUnique, params IndexDef[] indexInfo)
         {
-            InternalAddIndex(indexName, isUnique, String.Join(", ", indexInfo.Select(ii => ii.ToString())));
+            AddIndex(indexName, isUnique, String.Join(", ", indexInfo.Select(ii => ii.ToString())));
         }
 
-        private void InternalAddIndex(string indexName, bool isUnique, string columnDefinition)
+        private void AddIndex(string indexName, bool isUnique, string columnDefinition)
         {
             if (isUnique)
             {
