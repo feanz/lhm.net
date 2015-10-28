@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lhm.net", "lhm.net.csproj", "{3DA56375-D594-4A4F-8964-D7E0DFAC660E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lhm.net", "lhm.net\lhm.net.csproj", "{3DA56375-D594-4A4F-8964-D7E0DFAC660E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lhm.Test", "lhm.Test\lhm.Test.csproj", "{8A517353-A38E-4FF9-8659-1231E7C3DF0A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lhm.net.sample", "lhm.net.sample\lhm.net.sample.csproj", "{8A517353-A38E-4FF9-8659-1231E7C3DF0A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

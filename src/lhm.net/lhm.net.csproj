@@ -87,7 +87,9 @@
     <Compile Include="TravelAgent.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Lhm.Test.sql" />
+    <Content Include="SampleDatabase.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

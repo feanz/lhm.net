@@ -48,7 +48,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\lhm.net.csproj">
+    <ProjectReference Include="..\lhm.net\lhm.net.csproj">
       <Project>{3da56375-d594-4a4f-8964-d7e0dfac660e}</Project>
       <Name>lhm.net</Name>
     </ProjectReference>
