@@ -32,6 +32,16 @@ namespace lhm.Test
                 migrator.RemoveColumn("DateOfBirth");
             });
 
+            Lhm.ChangeTable("User", migrator =>
+            {
+                migrator.AddIndex("Email", true, "Email");
+            });
+
+            Lhm.ChangeTable("User", migrator =>
+            {
+                migrator.AddCompoundIndex("FirstNameLastname", false, "FirstName", "LastName");
+            });
+
             Console.ReadLine();
         }
 

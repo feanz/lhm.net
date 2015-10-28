@@ -25,6 +25,7 @@ namespace lhm.net
             HandlePrimaryKey();
             HandleAlterTable();
             HandleForiegnKey();
+            HandleIndexes();
 
             _connection.Execute(_buildScript);
         }
@@ -33,6 +34,12 @@ namespace lhm.net
         {
             _buildScript = Regex.Replace(_buildScript, "WITH CHECK ADD  CONSTRAINT \\[(.*?)\\]", MatchIndexKey);
             _buildScript = Regex.Replace(_buildScript, "CHECK CONSTRAINT \\[(.*?)\\]", MatchIndexKey);
+        }
+
+        private void HandleIndexes()
+        {
+            _buildScript = Regex.Replace(_buildScript, "CREATE UNIQUE NONCLUSTERED INDEX \\[(.*?)\\]", MatchIndexKey);
+            _buildScript = Regex.Replace(_buildScript, "CREATE UNIQUE NONCLUSTERED INDEX \\[(.*?)\\].\\[(.*?)\\]", NewTableName);
         }
 
         private void HandleCreateTable()
