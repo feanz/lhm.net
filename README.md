@@ -26,17 +26,6 @@ without locking the table. This is done by copying table and using triggers.
 
 Lhm currently only works with MS SQL databases and currently needs to be plugged into an existing migration tool or ran as a custom tool.
 
-First ruff version of Lhm.net
-
-Existing functions
-
-* Add columns
-* Rename columns
-* Drop column
-* Create duplicate copy of table
-* Applies migration to table (only supports add column for now)
-* Create triggers to keep duplicate upto date
-* Copys data into new table with configurable batch size and deplays
-* Renames old table to archive name, renames new table to old table name
+## Sample Database
 
 There is a [sql script](https://github.com/feanz/lhm.net/blob/develop/src/lhm.net/SampleDatabase.sql) in the main project to make a sammple DB. 
