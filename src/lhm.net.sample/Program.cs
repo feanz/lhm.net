@@ -13,9 +13,11 @@ namespace lhm.Test
         {
             const string connectionString = "Server=(localdb)\\v11.0;;Initial Catalog=Lhm.Test;Integrated Security=True";
 
-            SetupSampleDatabase(connectionString);
-
             Lhm.Setup(connectionString);
+
+            Lhm.CleanUp(true);
+
+            SetupSampleDatabase(connectionString);
 
             Lhm.ChangeTable("User", migrator =>
             {

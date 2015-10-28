@@ -38,7 +38,7 @@ namespace lhm.net
 
         public string ArchiveName
         {
-            get { return string.Format("{0}_lhma_{1}", _origin.Name, _dateTimeStamp); }
+            get { return string.Format("{0}_lhm_{1}", _origin.Name, _dateTimeStamp); }
         }
 
         public string DateTimeStamp

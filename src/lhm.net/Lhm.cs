@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
+using Dapper;
 using lhm.net.Logging;
 using lhm.net.Throttler;
 using Serilog;
@@ -9,7 +12,7 @@ namespace lhm.net
 {
     public class Lhm
     {
-        private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
+        private static readonly ILog Logger; 
 
         private static string _connectionString;
         private static IDbConnection _connection;
@@ -27,6 +30,8 @@ namespace lhm.net
                 .WriteTo
                 .LiterateConsole(outputTemplate: "{Timestamp:HH:MM} [{Level}] ({Name:l}){NewLine} {Message}{NewLine}{Exception}")
                 .CreateLogger();
+
+            Logger = LogProvider.GetCurrentClassLogger();
         }
 
         public static void Setup(string connectionString)
@@ -56,6 +61,39 @@ namespace lhm.net
             finally
             {
                 Connection.Close();
+            }
+        }
+
+
+        public static void CleanUp(bool run = false)
+        {
+            var tables = Connection.Query<string>("SELECT TABLE_NAME FROM information_schema.tables WHERE TABLE_NAME Like '%_lhm_%'")
+                .ToList();
+
+            var triggers = Connection.Query<string>("SELECT sysobjects.name AS trigger_name FROM sysobjects WHERE sysobjects.type = 'TR' AND sysobjects.name like '%_lhm_%'")
+                .ToList();
+
+            if (run)
+            {
+                triggers.ForEach(s =>
+                {
+                    _connection.Execute(string.Format("DROP Trigger [{0}]", s));
+                });
+
+                tables.ForEach(s =>
+                {
+                    _connection.Execute(string.Format("DROP TABLE [{0}]", s));
+                });
+            }
+            else if (!tables.Any() && !triggers.Any())
+            {
+                Logger.Info("Everything is clean. Nothing to do.");
+            }
+            else
+            {
+                Logger.Info(string.Format("Existing LHM backup tables: \n\n{0} \n", string.Join("\n", tables)));
+                Logger.Info(string.Format("Existing LHM triggers: \n\n{0}\n", string.Join("\n", triggers)));
+                Logger.Info("Run Lhm.cleanup(true) to drop them all.");
             }
         }
 

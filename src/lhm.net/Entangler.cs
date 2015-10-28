@@ -54,7 +54,7 @@ namespace lhm.net
 
         private string CreateInsertTrigger()
         {
-            return string.Format(@"CREATE TRIGGER {0}_Insert_{1} ON [{0}] 
+            return string.Format(@"CREATE TRIGGER [{0}_Insert_lhm_{1}] ON [{0}] 
                                     AFTER INSERT 
                                     AS 
                                     BEGIN
@@ -65,7 +65,7 @@ namespace lhm.net
 
         private string CreateUpdateTrigger()
         {
-            return string.Format(@"CREATE TRIGGER {0}_Update_{1} ON [{0}] 
+            return string.Format(@"CREATE TRIGGER [{0}_Update_lhm_{1}] ON [{0}] 
                                     AFTER Update 
                                     AS 
                                     BEGIN 
@@ -78,7 +78,7 @@ namespace lhm.net
 
         private string CreateDeleteTrigger()
         {
-            return string.Format(@"CREATE TRIGGER [{0}_Delete_{1}] ON [{0}] 
+            return string.Format(@"CREATE TRIGGER [{0}_Delete_lhm_{1}] ON [{0}] 
                                     AFTER DELETE 
                                     AS 
                                     BEGIN
