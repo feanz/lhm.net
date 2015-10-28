@@ -70,6 +70,8 @@
     <Compile Include="ColumnInfo.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="ColumnInfoMap.cs" />
+    <Compile Include="IndexDef.cs" />
+    <Compile Include="IndexOrder.cs" />
     <Compile Include="RenameMap.cs" />
     <Compile Include="Entangler.cs" />
     <Compile Include="IndexInfo.cs" />
