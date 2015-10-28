@@ -19,25 +19,22 @@ IF EXISTS(SELECT 1 FROM sys.tables WHERE object_id = OBJECT_ID('User_Lhm'))
 BEGIN;
     DROP TABLE [User_Lhm];
 END;
-GO
+
 IF EXISTS(SELECT 1 FROM sys.tables WHERE object_id = OBJECT_ID('User'))
 BEGIN;
     DROP TABLE [User];
 END;
-GO
 
 IF EXISTS(SELECT 1 FROM sys.tables WHERE object_id = OBJECT_ID('Department'))
 BEGIN;
     DROP TABLE [Department];
 END;
-GO
 
 CREATE TABLE [Department] (
     [ID] INTEGER NOT NULL IDENTITY(1, 1),
     [Name] VARCHAR(50) NULL,    
     PRIMARY KEY ([ID])
 );
-GO
 
 CREATE TABLE [User] (
     [UserID] INTEGER NOT NULL IDENTITY(1, 1),
@@ -50,7 +47,6 @@ CREATE TABLE [User] (
 	[DepartmentID] INT NOT NULL,
     PRIMARY KEY ([UserID])
 );
-GO
 
 ALTER TABLE [User]  WITH CHECK ADD  CONSTRAINT [FK_dbo.User_dbo.Department] FOREIGN KEY(DepartmentID)
 REFERENCES [dbo].[Department] ([ID])
