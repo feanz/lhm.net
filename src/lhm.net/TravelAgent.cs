@@ -38,8 +38,8 @@ namespace lhm.net
 
         private void HandleIndexes()
         {
-            _buildScript = Regex.Replace(_buildScript, "CREATE UNIQUE NONCLUSTERED INDEX \\[(.*?)\\]", MatchIndexKey);
             _buildScript = Regex.Replace(_buildScript, "CREATE UNIQUE NONCLUSTERED INDEX \\[(.*?)\\].\\[(.*?)\\]", NewTableName);
+            _buildScript = Regex.Replace(_buildScript, "CREATE NONCLUSTERED INDEX \\[(.*?)\\].\\[(.*?)\\]", NewTableName);
         }
 
         private void HandleCreateTable()
