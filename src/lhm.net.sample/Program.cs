@@ -11,7 +11,7 @@ namespace lhm.Test
     {
         static void Main(string[] args)
         {
-            const string connectionString = "Server=(localdb)\\v11.0;;Initial Catalog=Lhm.Test;Integrated Security=True";
+            const string connectionString = "Server=localhost;;Initial Catalog=Lhm.Test;Integrated Security=True";
 
             SetupSampleDatabase(connectionString);
 
@@ -34,12 +34,12 @@ namespace lhm.Test
 
             Lhm.ChangeTable("User", migrator =>
             {
-                migrator.AddIndex("Email", true, "Email");
+                migrator.AddIndex("Email", true, new IndexDef("Email", IndexOrder.DESC));
             });
 
             Lhm.ChangeTable("User", migrator =>
             {
-                migrator.AddCompoundIndex("FirstNameLastname", false, "FirstName", "LastName");
+                migrator.AddCompoundIndex("FirstNameLastname", false, new []{ new IndexDef("FirstName", IndexOrder.ASC ), new IndexDef("LastName", IndexOrder.DESC)});
             });
 
             Console.ReadLine();

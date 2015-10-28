@@ -50,21 +50,26 @@ namespace lhm.net
             _renameMaps.Add(new RenameMap(oldColumnName, newColumnName));
         }
 
-        public void AddIndex(string indexName, bool isUnique, string columnName)
+        public void AddIndex(string indexName, bool isUnique, IndexDef indexDef)
+        {
+            InternalAddIndex(indexName, isUnique, indexDef.ToString());
+        }
+
+        public void AddCompoundIndex(string indexName, bool isUnique, params IndexDef[] indexInfo)
+        {
+            InternalAddIndex(indexName, isUnique, String.Join(", ", indexInfo.Select(ii => ii.ToString())));
+        }
+
+        private void InternalAddIndex(string indexName, bool isUnique, string columnDefinition)
         {
             if (isUnique)
             {
-                Ddl("CREATE UNIQUE INDEX {0}_index_{1} ON {2} ({3})", indexName, _dateTimeStamp, Name, columnName);
+                Ddl("CREATE UNIQUE INDEX {0}_index_{1} ON {2} ({3})", indexName, _dateTimeStamp, Name, columnDefinition);
             }
             else
             {
-                Ddl("CREATE INDEX {0}_index_{1} ON {2} ({3})", indexName, _dateTimeStamp, Name, columnName);
+                Ddl("CREATE INDEX {0}_index_{1} ON {2} ({3})", indexName, _dateTimeStamp, Name, columnDefinition);
             }
-        }
-
-        public void AddCompoundIndex(string indexName, bool isUnique, params string[] columnNames)
-        {
-            AddIndex(indexName, isUnique, String.Join(", ", columnNames));
         }
 
         private void Ddl(string format, params object[] args)
