@@ -7,7 +7,7 @@ namespace lhm.Test
     {
         static void Main(string[] args)
         {
-            Lhm.Setup("Server=localhost;;Initial Catalog=Lhm.Test;Integrated Security=True");
+            Lhm.Setup("Server=(localdb)\\v11.0;Initial Catalog=Lhm.Test;Integrated Security=True");
 
             Lhm.ChangeTable("User", migrator =>
             {
