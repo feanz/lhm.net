@@ -12,5 +12,7 @@ namespace lhm.net
         IEnumerable<T> Query<T>(string sql, object param = null);
 
         void Close();
+
+        IDbTransaction BeginTransaction();
     }
 }

@@ -13,11 +13,11 @@ namespace lhm.net
         private readonly ILhmConnection _connection;
         private readonly IThrottler _throttler;
 
-        public Chunker(TableMigration migration, ILhmConnection connection, MigrationOptions options)
+        public Chunker(TableMigration migration, ILhmConnection connection, IThrottler throttler)
         {
             _migration = migration;
             _connection = connection;
-            _throttler = options.Throttler;
+            _throttler = throttler;
         }
 
         public void Run()
@@ -54,8 +54,14 @@ namespace lhm.net
                 @"INSERT INTO {0} ({1}) 
                     SELECT {2} FROM [{3}]
                     ORDER BY {4} 
-                    OFFSET @skip ROWS FETCH NEXT @take ROWS ONLY;
-                  SELECT @@RowCount", _migration.Destination.Name, _migration.Intersection.InsertForDestination, _migration.Intersection.InsertForOrigin, _migration.Origin.Name, _migration.Origin.PrimaryKey);
+                    OFFSET {5} ROWS FETCH NEXT {6} ROWS ONLY;
+                  SELECT @@RowCount", _migration.Destination.Name,
+                                    _migration.Intersection.InsertForDestination,
+                                    _migration.Intersection.InsertForOrigin,
+                                    _migration.Origin.Name,
+                                    _migration.Origin.PrimaryKey,
+                                    skip,
+                                    take);
 
 
             var sql = insertStatement;

@@ -5,7 +5,7 @@ namespace lhm.net.tests.unit
 {
     public class MigratorTests
     {
-        public class DestinationProperty
+        public class Destination
         {
             [Fact]
             public void Should_have_correct_name()
@@ -16,7 +16,7 @@ namespace lhm.net.tests.unit
             }
         }
 
-        public class AddColumnMethod
+        public class AddColumn
         {
             [Fact]
             public void Should_add_a_column()

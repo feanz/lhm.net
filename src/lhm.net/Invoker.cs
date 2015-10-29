@@ -38,7 +38,7 @@ namespace lhm.net
             var entangler = new Entangler(migration, _connection);
             entangler.Run();
 
-            var chunker = new Chunker(migration, _connection, options);
+            var chunker = new Chunker(migration, _connection, options.Throttler);
             chunker.Run();
 
             if (options.UseAtomicSwitcher)
@@ -48,7 +48,7 @@ namespace lhm.net
             }
             else
             {
-                //todo create alternate switcher
+                //todo create locking switcher
             }
 
             Logger.Info("Finished LHM run on table " + _migrator.Destination);

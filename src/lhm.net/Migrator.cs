@@ -95,7 +95,7 @@ namespace lhm.net
 
             Logger.Info(string.Format("Applying migrations to table:{0}", Destination));
 
-            using (var transaction = new SqlTransaction(_connection))
+            using (var transaction = _connection.BeginTransaction())
             {
                 foreach (var migration in _statements)
                 {

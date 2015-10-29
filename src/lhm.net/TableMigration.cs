@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace lhm.net
@@ -10,19 +11,12 @@ namespace lhm.net
         private readonly string _dateTimeStamp;
         private readonly List<RenameMap> _columnMappings;
 
-        public TableMigration(Table origin, Table destination, string dateTimeStamp)
+        public TableMigration(Table origin, Table destination, string dateTimeStamp = null, List<RenameMap> columnMappings = null)
         {
             _origin = origin;
             _destination = destination;
-            _dateTimeStamp = dateTimeStamp;
-            _columnMappings = new List<RenameMap>();
-        }
-        public TableMigration(Table origin, Table destination, string dateTimeStamp, List<RenameMap> columnMappings)
-        {
-            _origin = origin;
-            _destination = destination;
-            _dateTimeStamp = dateTimeStamp;
-            _columnMappings = columnMappings;
+            _dateTimeStamp = dateTimeStamp ?? DateTime.UtcNow.ToString(Constants.DateFormat);
+            _columnMappings = columnMappings ?? new List<RenameMap>();
         }
 
         public Table Origin

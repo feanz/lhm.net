@@ -94,10 +94,10 @@ namespace lhm.net
 
             private List<IndexInfo> ReadIndicesInformation()
             {
-                var sql = @"SELECT c.COLUMN_NAME as Destination, 
+                var sql = @"SELECT c.COLUMN_NAME as Name, 
                                 i.is_primary_key as IsPrimaryKey
                                 FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE as c
-                                INNER JOIN sys.indexes as i on c.CONSTRAINT_NAME = i.Destination
+                                INNER JOIN sys.indexes as i on c.CONSTRAINT_NAME = i.Name
                                 WHERE TABLE_NAME = @table";
 
                 return _connection.Query<IndexInfo>(sql, new { table = _tableName })
@@ -112,7 +112,7 @@ namespace lhm.net
             private List<ColumnInfo> ReadColumnInformation()
             {
                 var sql = @"SELECT Table_Catalog as Catalog,                            
-                                Column_Name as Destination,   
+                                Column_Name as Name,   
 							    Table_Schema as [Schema],
                                 Data_Type as DataType,
 							    CASE IS_NULLABLE

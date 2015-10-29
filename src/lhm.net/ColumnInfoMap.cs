@@ -10,6 +10,7 @@ namespace lhm.net
         }
 
         public ColumnInfo OriginColumnInfo { get; private set; }
+
         public ColumnInfo DestinationColumnInfo { get; private set; }
     }
 }

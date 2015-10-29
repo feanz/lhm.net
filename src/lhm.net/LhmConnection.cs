@@ -37,6 +37,11 @@ namespace lhm.net
             }
         }
 
+        public IDbTransaction BeginTransaction()
+        {
+            return _connection.BeginTransaction();
+        }
+
         public void Dispose()
         {
             if (_connection != null)
