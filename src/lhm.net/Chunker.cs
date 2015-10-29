@@ -1,4 +1,6 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
+using System.Linq;
 using Dapper;
 using lhm.net.Logging;
 using lhm.net.Throttler;
@@ -49,13 +51,21 @@ namespace lhm.net
 
         private int Copy(int skip, int take)
         {
-            var sql = string.Format(
-                @"SET IDENTITY_INSERT [{0}] ON
-                   INSERT INTO {0} ({1}) 
+            var identityStatement = string.Format("SET IDENTITY_INSERT [{0}] ON", _migration.Destination.Name);
+            var insertStatement = string.Format(
+                @"INSERT INTO {0} ({1}) 
                     SELECT {2} FROM [{3}]
                     ORDER BY {4} 
                     OFFSET @skip ROWS FETCH NEXT @take ROWS ONLY;
                   SELECT @@RowCount", _migration.Destination.Name, _migration.Intersection.InsertForDestination, _migration.Intersection.InsertForOrigin, _migration.Origin.Name, _migration.Origin.PrimaryKey);
+
+
+            var sql = insertStatement;
+
+            if (_migration.Destination.Columns.Any(cl => cl.IsIdentity))
+            {
+                sql = identityStatement + Environment.NewLine + insertStatement;
+            }
 
             return _connection.Execute(sql, new { skip, take });
         }
