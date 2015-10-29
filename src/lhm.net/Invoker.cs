@@ -1,5 +1,4 @@
-﻿using System.Data;
-using lhm.net.Logging;
+﻿using lhm.net.Logging;
 using lhm.net.Throttler;
 
 namespace lhm.net
@@ -14,10 +13,10 @@ namespace lhm.net
     {
         private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
 
-        private readonly IDbConnection _connection;
+        private readonly ILhmConnection _connection;
         private readonly Migrator _migrator;
 
-        public Invoker(Table origin, IDbConnection connection)
+        public Invoker(Table origin, ILhmConnection connection)
         {
             _connection = connection;
             _migrator = new Migrator(origin, connection);

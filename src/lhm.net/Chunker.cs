@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Data;
 using System.Linq;
-using Dapper;
 using lhm.net.Logging;
 using lhm.net.Throttler;
 
@@ -12,10 +10,10 @@ namespace lhm.net
         private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
 
         private readonly TableMigration _migration;
-        private readonly IDbConnection _connection;
+        private readonly ILhmConnection _connection;
         private readonly IThrottler _throttler;
 
-        public Chunker(TableMigration migration, IDbConnection connection, MigrationOptions options)
+        public Chunker(TableMigration migration, ILhmConnection connection, MigrationOptions options)
         {
             _migration = migration;
             _connection = connection;

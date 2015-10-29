@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
-using Dapper;
 using lhm.net.Logging;
 
 namespace lhm.net
@@ -15,12 +13,12 @@ namespace lhm.net
     {
         private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
         private readonly Table _origin;
-        private readonly IDbConnection _connection;
+        private readonly ILhmConnection _connection;
         private readonly List<string> _statements;
-        private List<RenameMap> _renameMaps; 
+        private readonly List<RenameMap> _renameMaps; 
         private readonly string _dateTimeStamp;
 
-        public Migrator(Table origin, IDbConnection connection)
+        public Migrator(Table origin, ILhmConnection connection)
         {
             _origin = origin;
             _connection = connection;

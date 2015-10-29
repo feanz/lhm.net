@@ -1,8 +1,6 @@
 using System.Collections.Generic;
-using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
-using Dapper;
 using Microsoft.SqlServer.Management.Common;
 using Microsoft.SqlServer.Management.Smo;
 
@@ -15,13 +13,11 @@ namespace lhm.net
         private readonly string _ddl;
 
         private readonly List<ColumnInfo> _columns;
-        private readonly List<IndexInfo> _indices;
 
         public Table(string name, string pk, List<ColumnInfo> columns, List<IndexInfo> indices = null, string ddl = null)
         {
             _name = name;
             _columns = columns;
-            _indices = indices;
             _pk = pk;
             _ddl = ddl;
         }
@@ -51,7 +47,7 @@ namespace lhm.net
             get { return _pk; }
         }
 
-        public static Table Parse(string tableName, IDbConnection connection)
+        public static Table Parse(string tableName, ILhmConnection connection)
         {
             return new Parser(tableName, connection).Parse();
         }
@@ -59,9 +55,9 @@ namespace lhm.net
         private class Parser
         {
             private readonly string _tableName;
-            private readonly IDbConnection _connection;
+            private readonly ILhmConnection _connection;
 
-            public Parser(string tableName, IDbConnection connection)
+            public Parser(string tableName, ILhmConnection connection)
             {
                 _tableName = tableName;
                 _connection = connection;
@@ -78,9 +74,9 @@ namespace lhm.net
 
             private string BuildDdl()
             {
-                //todo possible schema parameter and way to not have to case to sql connection
-                var commands = new Server(new ServerConnection((SqlConnection)_connection))
-                    .Databases[_connection.Database]
+                //todo possible schema parameter not just hard code 'dbo' and way to not have to cast to sql connection
+                var commands = new Server(new ServerConnection((SqlConnection)_connection.DbConnection))
+                    .Databases[_connection.DbConnection.Database]
                     .Tables[_tableName, "dbo"]
                     .Script(new ScriptingOptions
                     {
@@ -115,7 +111,6 @@ namespace lhm.net
 
             private List<ColumnInfo> ReadColumnInformation()
             {
-                //todo do we need this anymore
                 var sql = @"SELECT Table_Catalog as Catalog,                            
                                 Column_Name as Name,   
 							    Table_Schema as [Schema],
