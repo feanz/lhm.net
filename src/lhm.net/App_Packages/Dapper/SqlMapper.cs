@@ -1598,7 +1598,8 @@ this IDbConnection cnn, string sql, object param = null, IDbTransaction transact
             {
                 if (reader != null)
                 {
-                    if (!reader.IsClosed) try { cmd.Cancel(); }
+                    if (!reader.IsClosed)
+                        try { cmd.Cancel(); }
                         catch { /* don't spoil the existing exception */ }
                     reader.Dispose();
                 }
@@ -1664,7 +1665,8 @@ this IDbConnection cnn, string sql, object param = null, IDbTransaction transact
             {
                 if (reader != null)
                 {
-                    if (!reader.IsClosed) try { cmd.Cancel(); }
+                    if (!reader.IsClosed)
+                        try { cmd.Cancel(); }
                         catch { /* don't spoil the existing exception */ }
                     reader.Dispose();
                 }
@@ -4343,8 +4345,8 @@ Type type, IDataReader reader, int startBound = 0, int length = -1, bool returnN
 
             private IEnumerable<TReturn> MultiReadInternal<TFirst, TSecond, TThird, TFourth, TFifth, TSixth, TSeventh, TReturn>(Delegate func, string splitOn)
             {
-                var identity = this.identity.ForGrid(typeof(TReturn), new Type[] { 
-                    typeof(TFirst), 
+                var identity = this.identity.ForGrid(typeof(TReturn), new Type[] {
+                    typeof(TFirst),
                     typeof(TSecond),
                     typeof(TThird),
                     typeof(TFourth),
@@ -5016,7 +5018,7 @@ string name, object value = null, DbType? dbType = null, ParameterDirection? dir
             do
             {
                 // Insert the names in the right order so expression 
-                // "Post.Author.Destination" becomes parameter "PostAuthorName"
+                // "Post.Author.Name" becomes parameter "PostAuthorName"
                 names.Insert(0, diving.Member.Name);
                 chain.Insert(0, diving);
 
@@ -5104,7 +5106,7 @@ string name, object value = null, DbType? dbType = null, ParameterDirection? dir
                 cache[lookup] = setter;
             }
 
-            // Queue the preparation to be fired off when adding parameters to the DbCommand
+        // Queue the preparation to be fired off when adding parameters to the DbCommand
         MAKECALLBACK:
             (outputCallbacks ?? (outputCallbacks = new List<Action>())).Add(() =>
             {
@@ -5536,7 +5538,7 @@ string name, object value = null, DbType? dbType = null, ParameterDirection? dir
             if (propertyInfo.DeclaringType == type) return propertyInfo.GetSetMethod(true);
 #if DNXCORE50
             return propertyInfo.DeclaringType.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
-                    .Single(x => x.Destination == propertyInfo.Destination
+                    .Single(x => x.Name == propertyInfo.Name
                         && x.PropertyType == propertyInfo.PropertyType
                         && IsParameterMatch(x.GetIndexParameters(), propertyInfo.GetIndexParameters())
                         ).GetSetMethod(true);
@@ -5768,7 +5770,7 @@ string name, object value = null, DbType? dbType = null, ParameterDirection? dir
             get
             {
                 var tmp = reader;
-                if (tmp == null) throw new ObjectDisposedException(GetType().Destination);
+                if (tmp == null) throw new ObjectDisposedException(GetType().Name);
                 return tmp;
             }
         }
@@ -5777,7 +5779,7 @@ string name, object value = null, DbType? dbType = null, ParameterDirection? dir
             get
             {
                 var tmp = cmd;
-                if (tmp == null) throw new ObjectDisposedException(GetType().Destination);
+                if (tmp == null) throw new ObjectDisposedException(GetType().Name);
                 return tmp;
             }
         }
