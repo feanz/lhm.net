@@ -19,9 +19,9 @@ namespace lhm.net
             get { return _connection; }
         }
 
-        public int Execute(string sql, object param = null)
+        public int Execute(string sql, object param = null,IDbTransaction transaction = null)
         {
-            return _connection.Execute(sql, param);
+            return _connection.Execute(sql, param, transaction);
         }
 
         public IEnumerable<T> Query<T>(string sql, object param = null)

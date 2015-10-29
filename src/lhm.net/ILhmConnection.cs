@@ -7,7 +7,7 @@ namespace lhm.net
     {
         IDbConnection DbConnection { get; }
 
-        int Execute(string sql, object param = null);
+        int Execute(string sql, object param = null, IDbTransaction transaction = null);
 
         IEnumerable<T> Query<T>(string sql, object param = null);
 

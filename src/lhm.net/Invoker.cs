@@ -29,7 +29,7 @@ namespace lhm.net
 
         public void Run(MigrationOptions options)
         {
-            Logger.Info("Starting LHM run on table " + _migrator.Name);
+            Logger.Info("Starting LHM run on table " + _migrator.Destination);
 
             options = ConfigureOptions(options);
 
@@ -51,7 +51,7 @@ namespace lhm.net
                 //todo create alternate switcher
             }
 
-            Logger.Info("Finished LHM run on table " + _migrator.Name);
+            Logger.Info("Finished LHM run on table " + _migrator.Destination);
         }
 
         private MigrationOptions ConfigureOptions(MigrationOptions options)

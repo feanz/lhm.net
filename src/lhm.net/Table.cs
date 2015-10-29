@@ -14,10 +14,10 @@ namespace lhm.net
 
         private readonly List<ColumnInfo> _columns;
 
-        public Table(string name, string pk, List<ColumnInfo> columns, List<IndexInfo> indices = null, string ddl = null)
+        public Table(string name, string pk = "Id", List<ColumnInfo> columns = null, string ddl = null)
         {
             _name = name;
-            _columns = columns;
+            _columns = columns ?? new List<ColumnInfo>();
             _pk = pk;
             _ddl = ddl;
         }
@@ -67,7 +67,7 @@ namespace lhm.net
             {
                 var indiciesInformation = ReadIndicesInformation();
 
-                var table = new Table(_tableName, ReadPrimaryKey(indiciesInformation), ReadColumnInformation(), indiciesInformation, BuildDdl());
+                var table = new Table(_tableName, ReadPrimaryKey(indiciesInformation), ReadColumnInformation(), BuildDdl());
 
                 return table;
             }
@@ -94,10 +94,10 @@ namespace lhm.net
 
             private List<IndexInfo> ReadIndicesInformation()
             {
-                var sql = @"SELECT c.COLUMN_NAME as Name, 
+                var sql = @"SELECT c.COLUMN_NAME as Destination, 
                                 i.is_primary_key as IsPrimaryKey
                                 FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE as c
-                                INNER JOIN sys.indexes as i on c.CONSTRAINT_NAME = i.Name
+                                INNER JOIN sys.indexes as i on c.CONSTRAINT_NAME = i.Destination
                                 WHERE TABLE_NAME = @table";
 
                 return _connection.Query<IndexInfo>(sql, new { table = _tableName })
@@ -112,7 +112,7 @@ namespace lhm.net
             private List<ColumnInfo> ReadColumnInformation()
             {
                 var sql = @"SELECT Table_Catalog as Catalog,                            
-                                Column_Name as Name,   
+                                Column_Name as Destination,   
 							    Table_Schema as [Schema],
                                 Data_Type as DataType,
 							    CASE IS_NULLABLE

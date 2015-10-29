@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lhm.net", "lhm.net\lhm.net.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lhm.net.sample", "lhm.net.sample\lhm.net.sample.csproj", "{8A517353-A38E-4FF9-8659-1231E7C3DF0A}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{6290C27C-40ED-4977-BB78-622317A9CC47}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lhm.net.tests.unit", "tests\lhm.net.tests.unit\lhm.net.tests.unit.csproj", "{6B1E46EC-BD9F-49AF-990B-17FD15092DF4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,8 +25,15 @@ Global
 		{8A517353-A38E-4FF9-8659-1231E7C3DF0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8A517353-A38E-4FF9-8659-1231E7C3DF0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8A517353-A38E-4FF9-8659-1231E7C3DF0A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B1E46EC-BD9F-49AF-990B-17FD15092DF4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B1E46EC-BD9F-49AF-990B-17FD15092DF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B1E46EC-BD9F-49AF-990B-17FD15092DF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B1E46EC-BD9F-49AF-990B-17FD15092DF4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6B1E46EC-BD9F-49AF-990B-17FD15092DF4} = {6290C27C-40ED-4977-BB78-622317A9CC47}
 	EndGlobalSection
 EndGlobal

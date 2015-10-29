@@ -5016,7 +5016,7 @@ string name, object value = null, DbType? dbType = null, ParameterDirection? dir
             do
             {
                 // Insert the names in the right order so expression 
-                // "Post.Author.Name" becomes parameter "PostAuthorName"
+                // "Post.Author.Destination" becomes parameter "PostAuthorName"
                 names.Insert(0, diving.Member.Name);
                 chain.Insert(0, diving);
 
@@ -5536,7 +5536,7 @@ string name, object value = null, DbType? dbType = null, ParameterDirection? dir
             if (propertyInfo.DeclaringType == type) return propertyInfo.GetSetMethod(true);
 #if DNXCORE50
             return propertyInfo.DeclaringType.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
-                    .Single(x => x.Name == propertyInfo.Name
+                    .Single(x => x.Destination == propertyInfo.Destination
                         && x.PropertyType == propertyInfo.PropertyType
                         && IsParameterMatch(x.GetIndexParameters(), propertyInfo.GetIndexParameters())
                         ).GetSetMethod(true);
@@ -5768,7 +5768,7 @@ string name, object value = null, DbType? dbType = null, ParameterDirection? dir
             get
             {
                 var tmp = reader;
-                if (tmp == null) throw new ObjectDisposedException(GetType().Name);
+                if (tmp == null) throw new ObjectDisposedException(GetType().Destination);
                 return tmp;
             }
         }
@@ -5777,7 +5777,7 @@ string name, object value = null, DbType? dbType = null, ParameterDirection? dir
             get
             {
                 var tmp = cmd;
-                if (tmp == null) throw new ObjectDisposedException(GetType().Name);
+                if (tmp == null) throw new ObjectDisposedException(GetType().Destination);
                 return tmp;
             }
         }

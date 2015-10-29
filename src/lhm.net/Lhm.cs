@@ -25,7 +25,7 @@ namespace lhm.net
         {
             Log.Logger = new LoggerConfiguration()
                 .WriteTo
-                .LiterateConsole(outputTemplate: "{Timestamp:HH:MM} [{Level}] ({Name:l}){NewLine} {Message}{NewLine}{Exception}")
+                .LiterateConsole(outputTemplate: "{Timestamp:HH:MM} [{Level}] ({Destination:l}){NewLine} {Message}{NewLine}{Exception}")
                 .CreateLogger();
 
             Logger = LogProvider.GetCurrentClassLogger();

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using lhm.net.Logging;
 
@@ -18,7 +19,7 @@ namespace lhm.net
         private readonly List<RenameMap> _renameMaps; 
         private readonly string _dateTimeStamp;
 
-        public Migrator(Table origin, ILhmConnection connection)
+        public Migrator(Table origin, ILhmConnection connection = null)
         {
             _origin = origin;
             _connection = connection;
@@ -27,24 +28,32 @@ namespace lhm.net
             _dateTimeStamp = DateTime.UtcNow.ToString(Constants.DateFormat);
         }
 
-        public string Name
+        public string Destination
         {
             get { return _origin.DestinationName; }
         }
 
+        public List<string> Statements
+        {
+            get
+            {
+                return _statements;
+            }
+        }
+
         public void AddColumn(string columnName, string type)
         {
-            Ddl("ALTER TABLE {0} Add {1} {2}", Name, columnName, type);
+            Ddl("ALTER TABLE [{0}] Add [{1}] [{2}]", Destination, columnName, type);
         }
 
         public void RemoveColumn(string columnName)
         {
-            Ddl("ALTER TABLE {0} DROP COLUMN {1}", Name, columnName);
+            Ddl("ALTER TABLE {0} DROP COLUMN {1}", Destination, columnName);
         }
 
         public void RenameColumn(string oldColumnName, string newColumnName)
         {
-            Ddl("EXEC sp_rename '{0}.{1}', '{2}', 'COLUMN'", Name, oldColumnName, newColumnName);
+            Ddl("EXEC sp_rename '{0}.{1}', '{2}', 'COLUMN'", Destination, oldColumnName, newColumnName);
             _renameMaps.Add(new RenameMap(oldColumnName, newColumnName));
         }
 
@@ -84,13 +93,19 @@ namespace lhm.net
         {
             CreateDestinationTables();
 
-            Logger.Info(string.Format("Applying migrations to table:{0}", Name));
+            Logger.Info(string.Format("Applying migrations to table:{0}", Destination));
 
-            foreach (var migration in _statements)
+            using (var transaction = new SqlTransaction(_connection))
             {
-                Logger.InfoFormat(string.Format("Applying migration to table:{0} Migration:{1}", Name, migration));
+                foreach (var migration in _statements)
+                {
+                    Logger.InfoFormat(string.Format("Applying migration to table:{0} Migration:{1}", Destination,
+                        migration));
 
-                _connection.Execute(migration);
+                    _connection.Execute(migration, transaction: transaction);
+                }
+
+                transaction.Commit();
             }
 
             if (_renameMaps.Any())
@@ -103,7 +118,7 @@ namespace lhm.net
 
         private void CreateDestinationTables()
         {
-            Logger.Info(string.Format("Creating destination table:{0}", Name));
+            Logger.Info(string.Format("Creating destination table:{0}", Destination));
 
             var builder = new TravelAgent(_origin, _connection, _dateTimeStamp);
 

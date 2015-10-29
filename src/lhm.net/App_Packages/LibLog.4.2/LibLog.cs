@@ -1,4 +1,4 @@
-//===============================================================================
+﻿//===============================================================================
 // LibLog
 //
 // https://github.com/damianh/LibLog
@@ -385,7 +385,7 @@ namespace lhm.net.Logging
         /// <summary>
         /// Gets the specified named logger.
         /// </summary>
-        /// <param name="name">Name of the logger.</param>
+        /// <param name="name">Destination of the logger.</param>
         /// <returns>The logger reference.</returns>
         Logger GetLogger(string name);
 
@@ -1485,7 +1485,7 @@ namespace lhm.net.Logging.LogProviders
                 valueParam,
                 destructureObjectsParam)
                 .Compile();
-            return name => func("Name", name, false);
+            return name => func("Destination", name, false);
         }
 
         internal class SerilogLogger
