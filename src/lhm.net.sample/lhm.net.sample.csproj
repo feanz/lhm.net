@@ -7,8 +7,8 @@
     <ProjectGuid>{8A517353-A38E-4FF9-8659-1231E7C3DF0A}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>lhm.Test</RootNamespace>
-    <AssemblyName>lhm.Test</AssemblyName>
+    <RootNamespace>lhm.net.sample</RootNamespace>
+    <AssemblyName>lhm.net.sample</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
