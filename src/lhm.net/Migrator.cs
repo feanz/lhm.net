@@ -69,18 +69,18 @@ namespace lhm.net
 
         public void RemoveIndex(string indexName)
         {
-            Ddl("DROP INDEX {0} ON {1}", indexName, Name);
+            Ddl("DROP INDEX {0} ON {1}", indexName, Destination);
         }
 
         private void AddIndex(string indexName, bool isUnique, string columnDefinition)
         {
             if (isUnique)
             {
-                Ddl("CREATE UNIQUE INDEX {0} ON {1} ({2})", indexName, Name, columnDefinition);
+                Ddl("CREATE UNIQUE INDEX {0} ON {1} ({2})", indexName, Destination, columnDefinition);
             }
             else
             {
-                Ddl("CREATE INDEX {0} ON {1} ({2})", indexName, Name, columnDefinition);
+                Ddl("CREATE INDEX {0} ON {1} ({2})", indexName, Destination, columnDefinition);
             }
         }
 
