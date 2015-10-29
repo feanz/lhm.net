@@ -49,6 +49,11 @@ namespace lhm.Test
                 migrator.RemoveIndex("Email");
             });
 
+            Lhm.ChangeTable("Position", migrator =>
+            {
+                migrator.RenameColumn("Name", "Type");
+            });
+
             Console.ReadLine();
         }
 
