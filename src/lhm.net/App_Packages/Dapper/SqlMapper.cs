@@ -1598,7 +1598,8 @@ this IDbConnection cnn, string sql, object param = null, IDbTransaction transact
             {
                 if (reader != null)
                 {
-                    if (!reader.IsClosed) try { cmd.Cancel(); }
+                    if (!reader.IsClosed)
+                        try { cmd.Cancel(); }
                         catch { /* don't spoil the existing exception */ }
                     reader.Dispose();
                 }
@@ -1664,7 +1665,8 @@ this IDbConnection cnn, string sql, object param = null, IDbTransaction transact
             {
                 if (reader != null)
                 {
-                    if (!reader.IsClosed) try { cmd.Cancel(); }
+                    if (!reader.IsClosed)
+                        try { cmd.Cancel(); }
                         catch { /* don't spoil the existing exception */ }
                     reader.Dispose();
                 }
@@ -4343,8 +4345,8 @@ Type type, IDataReader reader, int startBound = 0, int length = -1, bool returnN
 
             private IEnumerable<TReturn> MultiReadInternal<TFirst, TSecond, TThird, TFourth, TFifth, TSixth, TSeventh, TReturn>(Delegate func, string splitOn)
             {
-                var identity = this.identity.ForGrid(typeof(TReturn), new Type[] { 
-                    typeof(TFirst), 
+                var identity = this.identity.ForGrid(typeof(TReturn), new Type[] {
+                    typeof(TFirst),
                     typeof(TSecond),
                     typeof(TThird),
                     typeof(TFourth),
@@ -5104,7 +5106,7 @@ string name, object value = null, DbType? dbType = null, ParameterDirection? dir
                 cache[lookup] = setter;
             }
 
-            // Queue the preparation to be fired off when adding parameters to the DbCommand
+        // Queue the preparation to be fired off when adding parameters to the DbCommand
         MAKECALLBACK:
             (outputCallbacks ?? (outputCallbacks = new List<Action>())).Add(() =>
             {

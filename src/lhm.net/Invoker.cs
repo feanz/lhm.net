@@ -1,5 +1,4 @@
-﻿using System.Data;
-using lhm.net.Logging;
+﻿using lhm.net.Logging;
 using lhm.net.Throttler;
 
 namespace lhm.net
@@ -14,10 +13,10 @@ namespace lhm.net
     {
         private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
 
-        private readonly IDbConnection _connection;
+        private readonly ILhmConnection _connection;
         private readonly Migrator _migrator;
 
-        public Invoker(Table origin, IDbConnection connection)
+        public Invoker(Table origin, ILhmConnection connection)
         {
             _connection = connection;
             _migrator = new Migrator(origin, connection);
@@ -30,7 +29,7 @@ namespace lhm.net
 
         public void Run(MigrationOptions options)
         {
-            Logger.Info("Starting LHM run on table " + _migrator.Name);
+            Logger.Info("Starting LHM run on table " + _migrator.Destination);
 
             options = ConfigureOptions(options);
 
@@ -39,7 +38,7 @@ namespace lhm.net
             var entangler = new Entangler(migration, _connection);
             entangler.Run();
 
-            var chunker = new Chunker(migration, _connection, options);
+            var chunker = new Chunker(migration, _connection, options.Throttler);
             chunker.Run();
 
             if (options.UseAtomicSwitcher)
@@ -49,10 +48,10 @@ namespace lhm.net
             }
             else
             {
-                //todo create alternate switcher
+                //todo create locking switcher
             }
 
-            Logger.Info("Finished LHM run on table " + _migrator.Name);
+            Logger.Info("Finished LHM run on table " + _migrator.Destination);
         }
 
         private MigrationOptions ConfigureOptions(MigrationOptions options)

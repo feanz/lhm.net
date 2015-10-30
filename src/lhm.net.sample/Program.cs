@@ -41,7 +41,7 @@ namespace lhm.Test
 
             Lhm.ChangeTable("User", migrator =>
             {
-                migrator.AddIndex("FirstNameLastname", false, new[] { new IndexDef("FirstName", IndexOrder.ASC), new IndexDef("LastName", IndexOrder.DESC) });
+                migrator.AddIndex("FirstNameLastname", false, new IndexDef("FirstName", IndexOrder.ASC), new IndexDef("LastName", IndexOrder.DESC));
             });
 
             Lhm.ChangeTable("User", migrator =>

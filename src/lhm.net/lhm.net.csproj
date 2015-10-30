@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>lhm.net</RootNamespace>
     <AssemblyName>lhm.net</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -70,8 +71,10 @@
     <Compile Include="ColumnInfo.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="ColumnInfoMap.cs" />
+    <Compile Include="ILhmConnection.cs" />
     <Compile Include="IndexDef.cs" />
     <Compile Include="IndexOrder.cs" />
+    <Compile Include="LhmConnection.cs" />
     <Compile Include="RenameMap.cs" />
     <Compile Include="Entangler.cs" />
     <Compile Include="IndexInfo.cs" />

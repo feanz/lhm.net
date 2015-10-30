@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
-using Dapper;
 using lhm.net.Logging;
 using lhm.net.Throttler;
 using Serilog;
@@ -12,10 +9,10 @@ namespace lhm.net
 {
     public class Lhm
     {
-        private static readonly ILog Logger; 
+        private static readonly ILog Logger;
 
         private static string _connectionString;
-        private static IDbConnection _connection;
+        private static ILhmConnection _connection;
 
         private static IThrottler _defaultThrottler;
 
@@ -64,7 +61,6 @@ namespace lhm.net
             }
         }
 
-
         public static void CleanUp(bool run = false)
         {
             var tables = Connection.Query<string>("SELECT TABLE_NAME FROM information_schema.tables WHERE TABLE_NAME Like '%_lhm_%'")
@@ -97,7 +93,7 @@ namespace lhm.net
             }
         }
 
-        private static IDbConnection Connection
+        private static ILhmConnection Connection
         {
             get
             {
@@ -108,7 +104,7 @@ namespace lhm.net
                         throw new Exception("No connection string provided Please call LHM setup");
                     }
                     //todo add connection string validation
-                    _connection = new SqlConnection(_connectionString);
+                    _connection = new LhmConnection(new SqlConnection(_connectionString));
                     return _connection;
                 }
                 return _connection;

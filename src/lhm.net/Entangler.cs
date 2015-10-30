@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using Dapper;
 using lhm.net.Logging;
 
 namespace lhm.net
@@ -14,13 +12,13 @@ namespace lhm.net
     {
         private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
 
-        private readonly IDbConnection _connection;
+        private readonly ILhmConnection _connection;
         private readonly Table _origin;
         private readonly Table _destination;
         private readonly Intersection _intersection;
         private readonly string _timestamp;
 
-        public Entangler(TableMigration migration, IDbConnection connection)
+        public Entangler(TableMigration migration, ILhmConnection connection)
         {
             _connection = connection;
             _intersection = migration.Intersection;

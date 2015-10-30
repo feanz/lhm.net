@@ -1,6 +1,4 @@
-﻿using System.Data;
-using Dapper;
-using lhm.net.Logging;
+﻿using lhm.net.Logging;
 
 namespace lhm.net
 {
@@ -9,9 +7,9 @@ namespace lhm.net
         private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
 
         private readonly TableMigration _migration;
-        private readonly IDbConnection _connection;
+        private readonly ILhmConnection _connection;
 
-        public AtomicSwitcher(TableMigration migration, IDbConnection connection)
+        public AtomicSwitcher(TableMigration migration, ILhmConnection connection)
         {
             _migration = migration;
             _connection = connection;

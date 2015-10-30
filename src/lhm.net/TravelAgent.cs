@@ -1,18 +1,16 @@
 using System;
-using System.Data;
 using System.Globalization;
 using System.Text.RegularExpressions;
-using Dapper;
 
 namespace lhm.net
 {
     public class TravelAgent
     {
-        private readonly IDbConnection _connection;
+        private readonly ILhmConnection _connection;
         private readonly string _dateTimeStamp;
         private string _buildScript;
 
-        public TravelAgent(Table origin, IDbConnection connection, string dateTimeStamp)
+        public TravelAgent(Table origin, ILhmConnection connection, string dateTimeStamp)
         {
             _connection = connection;
             _dateTimeStamp = dateTimeStamp;
