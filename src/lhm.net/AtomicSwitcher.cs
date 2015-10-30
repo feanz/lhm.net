@@ -1,4 +1,5 @@
-﻿using lhm.net.Logging;
+﻿using System.Linq;
+using lhm.net.Logging;
 
 namespace lhm.net
 {
@@ -15,21 +16,38 @@ namespace lhm.net
             _connection = connection;
         }
 
-
         public void Run()
         {
             Logger.Info(string.Format("Renaming origin table {0} to archive table {1}", _migration.Origin.Name, _migration.ArchiveName));
 
-            var sql = string.Format(@"DECLARE @TranName VARCHAR(20);
-                                      SELECT @TranName = 'LHM_Rename_Table';
-                                      BEGIN TRANSACTION @TranName;
+            var sql = $@"DECLARE @TranName VARCHAR(20);
+                        SELECT @TranName = 'LHM_Rename_Table';
+                        BEGIN TRANSACTION @TranName;
 
-                                        exec sp_rename [{0}], [{1}];
-                                        exec sp_rename [{2}], [{0}] 
+                        exec sp_rename [{_migration.Origin.Name}], [{_migration.ArchiveName}];
+                        exec sp_rename [{_migration.Destination.Name}], [{_migration.Origin.Name}] 
 
-                                      COMMIT TRANSACTION @TranName;", _migration.Origin.Name, _migration.ArchiveName, _migration.Destination.Name);
+                        COMMIT TRANSACTION @TranName;";
             
             _connection.Execute(sql);
+
+            sql = $@"SELECT obj.name AS FK_NAME
+                    FROM sys.foreign_key_columns fkc
+                    INNER JOIN sys.objects obj
+                    ON obj.object_id = fkc.constraint_object_id
+                    INNER JOIN sys.tables table1
+                    ON table1.object_id = fkc.parent_object_id
+                    WHERE table1.name = '{_migration.ArchiveName}'";
+
+            var foriegnKeys = _connection.Query<string>(sql).ToList();
+
+            foriegnKeys.ForEach(fk =>
+            {
+                sql = $"ALTER TABLE {_migration.ArchiveName} DROP CONSTRAINT \"{fk}\"";
+
+                _connection.Execute(sql);
+            });
+
         }
     }
 }

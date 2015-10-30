@@ -63,9 +63,6 @@ namespace lhm.net
 
         public static void CleanUp(bool run = false)
         {
-            var dependantTables = Connection.Query<string>("SELECT DISTINCT b.name FROM sys.foreign_keys a INNER JOIN sys.objects b ON b.object_id = a.parent_object_id")
-                    .ToList();
-
             var tables = Connection.Query<string>("SELECT TABLE_NAME FROM information_schema.tables WHERE TABLE_NAME Like '%_lhm_%'")
                 .ToList();
 
@@ -79,12 +76,7 @@ namespace lhm.net
                     _connection.Execute(string.Format("DROP Trigger [{0}]", s));
                 });
                 
-                dependantTables.ForEach(s =>
-                {
-                    _connection.Execute(string.Format("DROP TABLE [{0}]", s));
-                });
-
-                tables.Except(dependantTables).ToList().ForEach(s =>
+                tables.ForEach(s =>
                 {
                     _connection.Execute(string.Format("DROP TABLE [{0}]", s));
                 });

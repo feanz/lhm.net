@@ -46,7 +46,6 @@ namespace lhm.net
 
             Logger.Info($"Finsihed copying data from: {_migration.Origin.Name} to {_migration.Destination.Name} rows copied:{rowsAffected}");
         }
-
         private int Copy(int skip, int take)
         {
             var identityStatement = $"SET IDENTITY_INSERT [{_migration.Destination.Name}] ON";
