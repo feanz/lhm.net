@@ -11,7 +11,7 @@ namespace lhm.Test
     {
         static void Main(string[] args)
         {
-            const string connectionString = "Server=localhost;;Initial Catalog=Lhm.Test;Integrated Security=True";
+            const string connectionString = "Server=(localdb)\\v11.0;;Initial Catalog=Lhm.Test;Integrated Security=True";
 
             Lhm.Setup(connectionString);
 
