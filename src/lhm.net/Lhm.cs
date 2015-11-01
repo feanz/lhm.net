@@ -3,7 +3,6 @@ using System.Data.SqlClient;
 using System.Linq;
 using lhm.net.Logging;
 using lhm.net.Throttler;
-using Serilog;
 
 namespace lhm.net
 {
@@ -23,11 +22,6 @@ namespace lhm.net
 
         static Lhm()
         {
-            Log.Logger = new LoggerConfiguration()
-                .WriteTo
-                .LiterateConsole(outputTemplate: "{Timestamp:HH:MM} [{Level}] ({Name:l}){NewLine} {Message}{NewLine}{Exception}")
-                .CreateLogger();
-
             Logger = LogProvider.GetCurrentClassLogger();
         }
 

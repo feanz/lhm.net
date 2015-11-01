@@ -3,15 +3,20 @@ using System.Data.SqlClient;
 using System.IO;
 using System.Reflection;
 using Dapper;
-using lhm.net;
+using Serilog;
 
-namespace lhm.Test
+namespace lhm.net.sample
 {
     class Program
     {
         static void Main(string[] args)
         {
             const string connectionString = "Server=(localdb)\\v11.0;;Initial Catalog=Lhm.Test;Integrated Security=True";
+
+            Log.Logger = new LoggerConfiguration()
+             .WriteTo
+             .LiterateConsole(outputTemplate: "{Timestamp:HH:MM} [{Level}] ({Name:l}){NewLine} {Message}{NewLine}{Exception}")
+             .CreateLogger();
 
             Lhm.Setup(connectionString);
 
