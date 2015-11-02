@@ -1,0 +1,20 @@
+﻿<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>Lhm.Net</id>
+    <version>0.1.0.0-pre</version>
+    <title>Lhm.Net</title>
+    <authors>Richard Forrest, P G Amila Prabandhika</authors>
+    <owners>Bede Gaming Ltd</owners>
+    <projectUrl>https://github.com/feanz/lhm.net</projectUrl>
+    
+    <summary>Lhm.Net is a data migration tool for SQL Server</summary>
+    <description>Lhm.Net is a port of the lhm application created by SoundCloud to perform migrations on large databased without distrupting live operations on the database.</description>
+    
+    <copyright>Copyright 2015</copyright>
+    
+      <dependencies>
+      <dependency id="Microsoft.SqlServer.Scripting" version="4.0.0.3" />
+    </dependencies>
+  </metadata>
+</package>

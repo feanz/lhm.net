@@ -11,6 +11,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{6290C27C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lhm.net.tests.unit", "tests\lhm.net.tests.unit\lhm.net.tests.unit.csproj", "{6B1E46EC-BD9F-49AF-990B-17FD15092DF4}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Nuspec", "Nuspec", "{9AF27C9A-9FAB-463B-BB79-EF9759E71D78}"
+	ProjectSection(SolutionItems) = preProject
+		lhm.net.nuspec = lhm.net.nuspec
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
