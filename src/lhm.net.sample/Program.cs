@@ -24,6 +24,11 @@ namespace lhm.net.sample
 
             SetupSampleDatabase(connectionString);
 
+            Lhm.ChangeTable("Position", migrator =>
+            {
+                migrator.RenameColumn("Name", "Type");
+            });
+
             Lhm.ChangeTable("User", migrator =>
             {
                 migrator.AddColumn("IsSuspended", "bit");
@@ -52,11 +57,6 @@ namespace lhm.net.sample
             Lhm.ChangeTable("User", migrator =>
             {
                 migrator.RemoveIndex("Email");
-            });
-
-            Lhm.ChangeTable("Position", migrator =>
-            {
-                migrator.RenameColumn("Name", "Type");
             });
 
             Console.ReadLine();

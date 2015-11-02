@@ -1,6 +1,7 @@
 using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
+using Microsoft.SqlServer.Management.Smo;
 
 namespace lhm.net
 {
@@ -22,16 +23,17 @@ namespace lhm.net
             HandleCreateTable();
             HandlePrimaryKey();
             HandleAlterTable();
-            HandleForiegnKey();
+            HandleForeignKey();
             HandleIndexes();
 
             _connection.Execute(_buildScript);
         }
 
-        private void HandleForiegnKey()
+        private void HandleForeignKey()
         {
             _buildScript = Regex.Replace(_buildScript, "WITH CHECK ADD  CONSTRAINT \\[(.*?)\\]", MatchIndexKey);
             _buildScript = Regex.Replace(_buildScript, "CHECK CONSTRAINT \\[(.*?)\\]", MatchIndexKey);
+            _buildScript = Regex.Replace(_buildScript, "REFERENCES \\[(.*?)\\].\\[(.*?)\\]", TableName);
         }
 
         private void HandleIndexes()
@@ -67,6 +69,25 @@ namespace lhm.net
             var tableName = m.Groups[2].Value;
 
             return full.Replace(tableName, string.Format("{0}_lhm", tableName));
+        }
+
+        private string TableName(Match m)
+        {
+            if (m.Groups.Count < 3)
+            {
+                return m.Value;
+            }
+
+            var full = m.Groups[0].Value;
+            var tableName = m.Groups[2].Value;
+
+            if (tableName.Contains("_lhm"))
+            {
+                var splitResult = Regex.Split(tableName, "_(.*)");
+                return full.Replace(tableName, string.Format("{0}", splitResult[0]));
+            }
+            
+            return full.Replace(tableName, string.Format("{0}", tableName));
         }
 
         private string MatchIndexKey(Match m)

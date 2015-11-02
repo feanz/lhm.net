@@ -69,7 +69,7 @@ namespace lhm.net
                 {
                     _connection.Execute(string.Format("DROP Trigger [{0}]", s));
                 });
-
+                
                 tables.ForEach(s =>
                 {
                     _connection.Execute(string.Format("DROP TABLE [{0}]", s));
