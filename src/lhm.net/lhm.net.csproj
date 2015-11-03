@@ -59,6 +59,7 @@
     <Compile Include="ColumnInfo.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="ColumnInfoMap.cs" />
+    <Compile Include="FKeyInfo.cs" />
     <Compile Include="ILhmConnection.cs" />
     <Compile Include="IndexDef.cs" />
     <Compile Include="IndexOrder.cs" />
@@ -80,7 +81,10 @@
     <Compile Include="TravelAgent.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="SampleDatabase.sql">
+    <Content Include="TearDownSampleDatabase.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SetupSampleDatabase.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
