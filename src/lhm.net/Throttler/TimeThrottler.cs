@@ -7,7 +7,7 @@ namespace lhm.net.Throttler
         private readonly int _stride;
         private readonly int _delayMiliseconds;
 
-        public TimeThrottler(int stride, int delayMiliseconds)
+        public TimeThrottler(int stride, int delayMiliseconds = 100)
         {
             _stride = stride;
             _delayMiliseconds = delayMiliseconds;

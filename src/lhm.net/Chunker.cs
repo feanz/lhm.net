@@ -49,12 +49,19 @@ namespace lhm.net
         private int Copy(int skip, int take)
         {
             var identityStatement = $"SET IDENTITY_INSERT [{_migration.Destination.Name}] ON";
-            var insertStatement = $@"INSERT INTO [{_migration.Destination.Name}] ({_migration.Intersection.InsertForDestination})  
-                        SELECT {_migration.Intersection.InsertForOrigin} 
-                        FROM [{_migration.Origin.Name}] 
-                        ORDER BY {_migration.Origin.PrimaryKey} OFFSET {skip} ROWS FETCH NEXT {take} ROWS ONLY; 
-                        SELECT @@RowCount";
+            var insertStatement = $@"
+                        ;WITH Selection AS 
+                         ( SELECT {_migration.Intersection.InsertForOrigin} 
+                           ,ROW_NUMBER() OVER (ORDER BY {_migration.Origin.PrimaryKey}) AS RowNumber
+                           from {_migration.Origin.Name}                            
+                         )
 
+                        INSERT INTO [{_migration.Destination.Name}] ({_migration.Intersection.InsertForDestination})                          
+                        SELECT {_migration.Intersection.InsertForOrigin} 
+                        FROM Selection
+                        WHERE RowNumber > {skip} AND RowNumber <= {skip+take}
+                        ORDER BY {_migration.Origin.PrimaryKey}; 
+                        SELECT @@RowCount";
 
             var sql = insertStatement;
 
