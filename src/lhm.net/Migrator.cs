@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Linq;
 using lhm.net.Logging;
 
@@ -16,7 +15,7 @@ namespace lhm.net
         private readonly Table _origin;
         private readonly ILhmConnection _connection;
         private readonly List<string> _statements;
-        private readonly List<RenameMap> _renameMaps; 
+        private readonly List<RenameMap> _renameMaps;
         private readonly string _dateTimeStamp;
 
         public Migrator(Table origin, ILhmConnection connection = null)
@@ -25,7 +24,12 @@ namespace lhm.net
             _connection = connection;
             _statements = new List<string>();
             _renameMaps = new List<RenameMap>();
-            _dateTimeStamp = DateTime.UtcNow.ToString(Constants.DateFormat);
+            _dateTimeStamp = DateTime.UtcNow.ToString(Constants.DateTimeStampFormat);
+        }
+
+        public string Source
+        {
+            get { return _origin.Name; }
         }
 
         public string Destination
@@ -93,14 +97,13 @@ namespace lhm.net
         {
             CreateDestinationTables();
 
-            Logger.Info(string.Format("Applying migrations to table:{0}", Destination));
+            Logger.Info($"Applying migrations to table:{Destination}");
 
             using (var transaction = _connection.BeginTransaction())
             {
                 foreach (var migration in _statements)
                 {
-                    Logger.InfoFormat(string.Format("Applying migration to table:{0} Migration:{1}", Destination,
-                        migration));
+                    Logger.InfoFormat($"Applying migration to table:{Destination} Migration:{migration}");
 
                     _connection.Execute(migration, transaction: transaction);
                 }
@@ -118,7 +121,7 @@ namespace lhm.net
 
         private void CreateDestinationTables()
         {
-            Logger.Info(string.Format("Creating destination table:{0}", Destination));
+            Logger.Info($"Creating destination table:{Destination}");
 
             var builder = new TravelAgent(_origin, _connection, _dateTimeStamp);
 

@@ -29,7 +29,7 @@ namespace lhm.net
 
         public void Run(MigrationOptions options)
         {
-            Logger.Info("Starting LHM run on table " + _migrator.Destination);
+            Logger.Info($"Starting LHM run on table {_migrator.Source}");
 
             options = ConfigureOptions(options);
 
@@ -51,7 +51,7 @@ namespace lhm.net
                 //todo create locking switcher
             }
 
-            Logger.Info("Finished LHM run on table " + _migrator.Destination);
+            Logger.Info($"Finished LHM run on table {_migrator.Destination}");
         }
 
         private MigrationOptions ConfigureOptions(MigrationOptions options)
@@ -69,7 +69,7 @@ namespace lhm.net
                 }
 
                 //use the default throttler todo create throttler factory
-                options.Throttler = new TimeThrottler(10, 100);
+                options.Throttler = new TimeThrottler(40000, 100);
             }
 
             return options;

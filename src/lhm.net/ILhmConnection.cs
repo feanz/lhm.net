@@ -7,12 +7,14 @@ namespace lhm.net
     {
         IDbConnection DbConnection { get; }
 
+        IDbTransaction BeginTransaction();
+
         int Execute(string sql, object param = null, IDbTransaction transaction = null);
+
+        T ExecuteScalar<T>(string sql, object param = null);
 
         IEnumerable<T> Query<T>(string sql, object param = null);
 
         void Close();
-
-        IDbTransaction BeginTransaction();
     }
 }

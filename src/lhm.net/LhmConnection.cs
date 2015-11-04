@@ -24,6 +24,11 @@ namespace lhm.net
             return _connection.Execute(sql, param, transaction);
         }
 
+        public T ExecuteScalar<T>(string sql, object param = null)
+        {
+            return _connection.ExecuteScalar<T>(sql, param);
+        }
+
         public IEnumerable<T> Query<T>(string sql, object param = null)
         {
             return _connection.Query<T>(sql, param);
@@ -31,10 +36,7 @@ namespace lhm.net
 
         public void Close()
         {
-            if (_connection != null)
-            {
-                _connection.Close();
-            }
+            _connection?.Close();
         }
 
         public IDbTransaction BeginTransaction()

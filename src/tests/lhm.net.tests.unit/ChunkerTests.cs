@@ -23,7 +23,7 @@ namespace lhm.net.tests.unit
 
                 sut.Run();
 
-                connection.Verify(lhmConnection => lhmConnection.Execute(It.Is<string>(sql => sql.Contains("OFFSET 0 ROWS FETCH NEXT 1 ROWS ONLY;")),
+                connection.Verify(lhmConnection => lhmConnection.Execute(It.Is<string>(sql => sql.Contains("RowNumber > 0 AND RowNumber <= 1")),
                     It.IsAny<object>(),
                     It.IsAny<IDbTransaction>()));
             }

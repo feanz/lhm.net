@@ -11,6 +11,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{6290C27C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lhm.net.tests.unit", "tests\lhm.net.tests.unit\lhm.net.tests.unit.csproj", "{6B1E46EC-BD9F-49AF-990B-17FD15092DF4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lhm.net.tests.integration", "tests\lhm.net.tests.integration\lhm.net.tests.integration.csproj", "{F7CCAABB-0320-4FCE-8E76-2DAC4281C7EC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,11 +31,16 @@ Global
 		{6B1E46EC-BD9F-49AF-990B-17FD15092DF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6B1E46EC-BD9F-49AF-990B-17FD15092DF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6B1E46EC-BD9F-49AF-990B-17FD15092DF4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7CCAABB-0320-4FCE-8E76-2DAC4281C7EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7CCAABB-0320-4FCE-8E76-2DAC4281C7EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7CCAABB-0320-4FCE-8E76-2DAC4281C7EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7CCAABB-0320-4FCE-8E76-2DAC4281C7EC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{6B1E46EC-BD9F-49AF-990B-17FD15092DF4} = {6290C27C-40ED-4977-BB78-622317A9CC47}
+		{F7CCAABB-0320-4FCE-8E76-2DAC4281C7EC} = {6290C27C-40ED-4977-BB78-622317A9CC47}
 	EndGlobalSection
 EndGlobal

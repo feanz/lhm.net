@@ -15,7 +15,7 @@ namespace lhm.net
         {
             _origin = origin;
             _destination = destination;
-            _dateTimeStamp = dateTimeStamp ?? DateTime.UtcNow.ToString(Constants.DateFormat);
+            _dateTimeStamp = dateTimeStamp ?? DateTime.UtcNow.ToString(Constants.DateTimeStampFormat);
             _columnMappings = columnMappings ?? new List<RenameMap>();
         }
 
@@ -31,7 +31,7 @@ namespace lhm.net
 
         public string ArchiveName
         {
-            get { return string.Format("{0}_lhm_{1}", _origin.Name, _dateTimeStamp); }
+            get { return $"{_origin.Name}_lhm_{_dateTimeStamp}"; }
         }
 
         public string DateTimeStamp

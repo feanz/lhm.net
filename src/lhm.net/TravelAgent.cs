@@ -1,7 +1,6 @@
 using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
-using Microsoft.SqlServer.Management.Smo;
 
 namespace lhm.net
 {
@@ -31,6 +30,7 @@ namespace lhm.net
 
         private void HandleForeignKey()
         {
+            _buildScript = Regex.Replace(_buildScript, "WITH NOCHECK ADD  CONSTRAINT \\[(.*?)\\]", MatchIndexKey);
             _buildScript = Regex.Replace(_buildScript, "WITH CHECK ADD  CONSTRAINT \\[(.*?)\\]", MatchIndexKey);
             _buildScript = Regex.Replace(_buildScript, "CHECK CONSTRAINT \\[(.*?)\\]", MatchIndexKey);
             _buildScript = Regex.Replace(_buildScript, "REFERENCES \\[(.*?)\\].\\[(.*?)\\]", TableName);
@@ -45,7 +45,6 @@ namespace lhm.net
         private void HandleCreateTable()
         {
             _buildScript = Regex.Replace(_buildScript, "CREATE TABLE \\[(.*?)\\].\\[(.*?)\\]", NewTableName);
-            
         }
 
         private void HandlePrimaryKey()
@@ -68,7 +67,7 @@ namespace lhm.net
             var full = m.Groups[0].Value;
             var tableName = m.Groups[2].Value;
 
-            return full.Replace(tableName, string.Format("{0}_lhm", tableName));
+            return full.Replace(tableName, $"{tableName}_lhm");
         }
 
         private string TableName(Match m)
@@ -84,7 +83,7 @@ namespace lhm.net
             if (tableName.Contains("_lhm"))
             {
                 var splitResult = Regex.Split(tableName, "_(.*)");
-                return full.Replace(tableName, string.Format("{0}", splitResult[0]));
+                return full.Replace(tableName, $"{splitResult[0]}");
             }
             
             return full.Replace(tableName, string.Format("{0}", tableName));
@@ -108,23 +107,23 @@ namespace lhm.net
         private string CreateTimeStampedKey(string primaryKey)
         {
             var timeStampedKey = IsKeyAlreadyTimeStamped(primaryKey) ?
-                primaryKey.Remove(primaryKey.Length - 19) + _dateTimeStamp :
-                string.Format("{0}_{1}", primaryKey, _dateTimeStamp);
+                primaryKey.Remove(primaryKey.Length - Constants.DateTimeStampLength) + _dateTimeStamp :
+                $"{primaryKey}_{_dateTimeStamp}";
             return timeStampedKey;
         }
 
         private static bool IsKeyAlreadyTimeStamped(string primaryKey)
         {
-            if (primaryKey.Length < 19)
+            if (primaryKey.Length < Constants.DateTimeStampLength)
             {
                 return false;
             }
 
-            var dateTimeStamp = primaryKey.GetLast(19);
+            var dateTimeStamp = primaryKey.GetLast(Constants.DateTimeStampLength);
 
             DateTime temp;
             var provider = CultureInfo.InvariantCulture;
-            return DateTime.TryParseExact(dateTimeStamp, Constants.DateFormat, provider, DateTimeStyles.None, out temp);
+            return DateTime.TryParseExact(dateTimeStamp, Constants.DateTimeStampFormat, provider, DateTimeStyles.None, out temp);
         }
     }
 }

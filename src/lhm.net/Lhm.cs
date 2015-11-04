@@ -67,24 +67,30 @@ namespace lhm.net
             {
                 triggers.ForEach(s =>
                 {
-                    _connection.Execute(string.Format("DROP Trigger [{0}]", s));
+                    _connection.Execute($"DROP Trigger [{s}]");
                 });
                 
                 tables.ForEach(s =>
                 {
-                    _connection.Execute(string.Format("DROP TABLE [{0}]", s));
+                    _connection.Execute($"DROP TABLE [{s}]");
                 });
             }
             else if (!tables.Any() && !triggers.Any())
             {
-                Logger.Info("Everything is clean. Nothing to do.");
+                LogAndOutput("Everything is clean. Nothing to do.");
             }
             else
             {
-                Logger.Info(string.Format("Existing LHM backup tables: \n\n{0} \n", string.Join("\n", tables)));
-                Logger.Info(string.Format("Existing LHM triggers: \n\n{0}\n", string.Join("\n", triggers)));
-                Logger.Info("Run Lhm.cleanup(true) to drop them all.");
+                LogAndOutput($"Existing LHM backup tables: \n\n{string.Join("\n", tables)} \n");
+                LogAndOutput($"Existing LHM triggers: \n\n{string.Join("\n", triggers)}\n");
+                LogAndOutput("Run Lhm.cleanup(true) to drop them all.");
             }
+        }
+
+        private static void LogAndOutput(string message)
+        {
+            Console.WriteLine(message);
+            Logger.Info(message);
         }
 
         private static ILhmConnection Connection
