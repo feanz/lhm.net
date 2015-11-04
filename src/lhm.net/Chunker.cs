@@ -51,13 +51,13 @@ namespace lhm.net
             var identityStatement = $"SET IDENTITY_INSERT [{_migration.Destination.Name}] ON";
             var insertStatement = $@"
                         ;WITH Selection AS 
-                         ( SELECT {_migration.Intersection.InsertForOrigin} 
+                         ( SELECT {_migration.Intersection.OriginColumns} 
                            ,ROW_NUMBER() OVER (ORDER BY {_migration.Origin.PrimaryKey}) AS RowNumber
                            from {_migration.Origin.Name}                            
                          )
 
-                        INSERT INTO [{_migration.Destination.Name}] ({_migration.Intersection.InsertForDestination})                          
-                        SELECT {_migration.Intersection.InsertForOrigin} 
+                        INSERT INTO [{_migration.Destination.Name}] ({_migration.Intersection.DestinationColumns})                          
+                        SELECT {_migration.Intersection.OriginColumns} 
                         FROM Selection
                         WHERE RowNumber > {skip} AND RowNumber <= {skip+take}
                         ORDER BY {_migration.Origin.PrimaryKey}; 

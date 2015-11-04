@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using lhm.net.Logging;
 
 namespace lhm.net
@@ -25,19 +26,18 @@ namespace lhm.net
             _origin = migration.Origin;
             _destination = migration.Destination;
             _timestamp = migration.DateTimeStamp;
-
         }
 
         public void Run()
         {
-            Logger.Info(string.Format("Creating triggers between: {0} and {1}", _origin.Name, _destination.Name));
+            Logger.Info($"Creating triggers between: {_origin.Name} and {_destination.Name}");
 
             foreach (var entangle in Entanglers)
             {
                 _connection.Execute(entangle());
             }
 
-            Logger.Info(string.Format("Finished creating triggers between {0} and {1}", _origin.Name, _destination.Name));
+            Logger.Info($"Finished creating triggers between {_origin.Name} and {_destination.Name}");
         }
 
         public IEnumerable<Func<string>> Entanglers
@@ -52,36 +52,40 @@ namespace lhm.net
 
         private string CreateInsertTrigger()
         {
-            return string.Format(@"CREATE TRIGGER [{0}_Insert_lhm_{1}] ON [{0}] 
-                                    AFTER INSERT 
-                                    AS 
-                                    BEGIN
-                                        SET IDENTITY_INSERT [{2}] ON
-                                        Insert into {2} ({3}) select {4} from inserted
-                                    END", _origin.Name, _timestamp, _destination.Name, _intersection.InsertForDestination, _intersection.InsertForOrigin);
+            return $@"CREATE TRIGGER [{_origin.Name}_Insert_lhm_{_timestamp}] ON [{_origin.Name}] 
+                        AFTER INSERT 
+                        AS 
+                        BEGIN 
+                            SET IDENTITY_INSERT [{_destination.Name}] ON 
+                            Insert into {_destination.Name} ({_intersection.DestinationColumns}) select {_intersection.OriginColumns} from inserted 
+                        END";
         }
 
         private string CreateUpdateTrigger()
         {
-            return string.Format(@"CREATE TRIGGER [{0}_Update_lhm_{1}] ON [{0}] 
-                                    AFTER Update 
-                                    AS 
-                                    BEGIN 
-                                        Update [{2}] SET 
-                                        {3}
-                                        FROM [{2}]
-                                        INNER JOIN INSERTED ON [{2}].[{4}] = INSERTED.[{4}]
-                                    END", _origin.Name, _timestamp, _destination.Name, _intersection.UpdatesForDestination, _destination.PrimaryKey);
+            var updateDestinationColumns = string.Join("\n", _intersection.Common.Where(info => info.DestinationColumns.IsIdentity == false)
+                   .Select(info => $"[{_destination.Name}].[{info.DestinationColumns.Name}] = INSERTED.{info.OriginColumns.Name},"))
+                   .TrimEnd(',');
+
+            return $@"CREATE TRIGGER [{_origin.Name}_Update_lhm_{_timestamp}] ON [{_origin.Name}] 
+                        AFTER Update 
+                        AS 
+                        BEGIN 
+                            Update [{_destination.Name}] SET 
+                            {updateDestinationColumns}
+                            FROM [{_destination.Name}]
+                            INNER JOIN INSERTED ON [{_destination.Name}].[{_destination.PrimaryKey}] = INSERTED.[{_destination.PrimaryKey}]
+                        END";
         }
 
         private string CreateDeleteTrigger()
         {
-            return string.Format(@"CREATE TRIGGER [{0}_Delete_lhm_{1}] ON [{0}] 
-                                    AFTER DELETE 
-                                    AS 
-                                    BEGIN
-                                        DELETE FROM [{2}] WHERE {3} IN (SELECT {3} FROM DELETED)
-                                    END", _origin.Name, _timestamp, _destination.Name, _destination.PrimaryKey);
+            return $@"CREATE TRIGGER [{_origin.Name}_Delete_lhm_{_timestamp}] ON [{_origin.Name}] 
+                        AFTER DELETE 
+                        AS 
+                        BEGIN
+                            DELETE FROM [{_destination.Name}] WHERE {_destination.PrimaryKey} IN (SELECT {_destination.PrimaryKey} FROM DELETED)
+                        END";
         }
     }
 }

@@ -3,14 +3,14 @@ namespace lhm.net
 {
     public class ColumnInfoMap
     {
-        public ColumnInfoMap(ColumnInfo originColumnInfo, ColumnInfo destinationColumnInfo)
+        public ColumnInfoMap(ColumnInfo originColumns, ColumnInfo destinationColumns)
         {
-            OriginColumnInfo = originColumnInfo;
-            DestinationColumnInfo = destinationColumnInfo;
+            OriginColumns = originColumns;
+            DestinationColumns = destinationColumns;
         }
 
-        public ColumnInfo OriginColumnInfo { get; private set; }
+        public ColumnInfo OriginColumns { get; private set; }
 
-        public ColumnInfo DestinationColumnInfo { get; private set; }
+        public ColumnInfo DestinationColumns { get; private set; }
     }
 }

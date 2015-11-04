@@ -4,19 +4,15 @@ namespace lhm.net.Throttler
 {
     public class TimeThrottler : IThrottler
     {
-        private readonly int _stride;
         private readonly int _delayMiliseconds;
 
         public TimeThrottler(int stride, int delayMiliseconds = 100)
         {
-            _stride = stride;
+            Stride = stride;
             _delayMiliseconds = delayMiliseconds;
         }
 
-        public int Stride
-        {
-            get { return _stride; }
-        }
+        public int Stride { get; }
 
         public void Run()
         {
