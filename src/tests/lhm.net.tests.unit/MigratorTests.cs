@@ -12,20 +12,20 @@ namespace lhm.net.tests.unit
             {
                 var sut = new Migrator(new Table("Users"));
 
-                sut.Destination.Should().Equal("Users_lhm");
+                sut.Destination.Should().Equal("lhm_Users");
             }
         }
 
         public class AddColumn
         {
             [Fact]
-            public void Should_add_a_column()
+            public void Should_add_a_column_add_statement_to_statements()
             {
                 var sut = new Migrator(new Table("Users"));
 
                 sut.AddColumn("Logins", "int");
 
-                sut.Statements.Should().Contain.One("ALTER TABLE [Users_lhm] Add [Logins] [int]");
+                sut.Statements.Should().Contain.One("ALTER TABLE [lhm_Users] Add [Logins] [int]");
             }
         }
     }

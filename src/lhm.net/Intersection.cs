@@ -11,19 +11,11 @@ namespace lhm.net
         private readonly Table _origin;
         private readonly Table _destination;
 
-        public Intersection(Table origin, Table destination)
+        public Intersection(Table origin, Table destination, IEnumerable<RenameMap> renameMaps = null)
         {
             _origin = origin;
             _destination = destination;
-            Common = PopulateIntersects(new List<RenameMap>());
-        }
-
-        public Intersection(Table origin, Table destination, IEnumerable<RenameMap> renameMaps)
-        {
-            _origin = origin;
-            _destination = destination;
-
-            Common = PopulateIntersects(renameMaps);
+            Common = PopulateIntersects(renameMaps ?? new List<RenameMap>());
         }
 
         public List<ColumnInfoMap> Common { get; }

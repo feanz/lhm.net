@@ -5,6 +5,9 @@ using lhm.net.Logging;
 
 namespace lhm.net
 {
+    /// <summary>
+    /// Switches origin with destination table using an atomic rename.
+    /// </summary>
     public class AtomicSwitcher
     {
         private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();

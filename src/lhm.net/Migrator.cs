@@ -7,7 +7,7 @@ namespace lhm.net
 {
     /// <summary>
     ///  Copies existing schema and applies changes using alter on the empty table.
-    ///  `run` returns a Migration which can be used for the remaining process.
+    ///  `run` returns a TableMigration which can be used for the remaining process.
     /// </summary>
     public class Migrator
     {
@@ -18,32 +18,20 @@ namespace lhm.net
         private readonly List<RenameMap> _renameMaps;
         private readonly string _dateTimeStamp;
 
-        public Migrator(Table origin, ILhmConnection connection = null)
+        public Migrator(Table origin, ILhmConnection connection = null, string dateTimeStamp = null)
         {
             _origin = origin;
             _connection = connection;
             _statements = new List<string>();
             _renameMaps = new List<RenameMap>();
-            _dateTimeStamp = DateTime.UtcNow.ToString(Constants.DateTimeStampFormat);
+            _dateTimeStamp = dateTimeStamp ?? DateTime.UtcNow.ToString(Constants.DateTimeStampFormat);
         }
 
-        public string Source
-        {
-            get { return _origin.Name; }
-        }
+        public string Source => _origin.Name;
 
-        public string Destination
-        {
-            get { return _origin.DestinationName; }
-        }
+        public string Destination => _origin.DestinationName;
 
-        public List<string> Statements
-        {
-            get
-            {
-                return _statements;
-            }
-        }
+        public List<string> Statements => _statements;
 
         public void AddColumn(string columnName, string type)
         {
@@ -68,7 +56,7 @@ namespace lhm.net
 
         public void AddIndex(string indexName, bool isUnique, params IndexDef[] indexInfo)
         {
-            AddIndex(indexName, isUnique, String.Join(", ", indexInfo.Select(ii => ii.ToString())));
+            AddIndex(indexName, isUnique, string.Join(", ", indexInfo.Select(ii => ii.ToString())));
         }
 
         public void RemoveIndex(string indexName)
@@ -78,14 +66,8 @@ namespace lhm.net
 
         private void AddIndex(string indexName, bool isUnique, string columnDefinition)
         {
-            if (isUnique)
-            {
-                Ddl("CREATE UNIQUE INDEX {0} ON {1} ({2})", indexName, Destination, columnDefinition);
-            }
-            else
-            {
-                Ddl("CREATE INDEX {0} ON {1} ({2})", indexName, Destination, columnDefinition);
-            }
+            Ddl(!isUnique ? "CREATE INDEX {0} ON {1} ({2})" : "CREATE UNIQUE INDEX {0} ON {1} ({2})", indexName,
+                Destination, columnDefinition);
         }
 
         private void Ddl(string format, params object[] args)
@@ -95,8 +77,6 @@ namespace lhm.net
 
         public TableMigration Run()
         {
-            CreateDestinationTables();
-
             Logger.Info($"Applying migrations to table:{Destination}");
 
             using (var transaction = _connection.BeginTransaction())
@@ -111,21 +91,7 @@ namespace lhm.net
                 transaction.Commit();
             }
 
-            if (_renameMaps.Any())
-            {
-                return new TableMigration(_origin, ReadDestination(), _dateTimeStamp, _renameMaps);
-            }
-
-            return new TableMigration(_origin, ReadDestination(), _dateTimeStamp);
-        }
-
-        private void CreateDestinationTables()
-        {
-            Logger.Info($"Creating destination table:{Destination}");
-
-            var builder = new TravelAgent(_origin, _connection, _dateTimeStamp);
-
-            builder.PrepareDestination();
+            return new TableMigration(_origin, ReadDestination(), _dateTimeStamp, _renameMaps);
         }
 
         private Table ReadDestination()

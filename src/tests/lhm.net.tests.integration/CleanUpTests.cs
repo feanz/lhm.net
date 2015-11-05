@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text.RegularExpressions;
 using Should.Fluent;
 using Xunit;
 
@@ -29,7 +30,13 @@ namespace lhm.net.tests.integration
                 var output = sw.ToString();
 
                 output.Should().Contain("Existing LHM backup tables");
-                output.Should().Contain("Origin_lhm");
+                
+                var tableMatch = Regex.Match(output, @"lhm_\d{4}_\d{2}_\d{2}_\d{2}_\d{2}_\d{2}_\d{3}_" + Tables.Origin);
+
+                tableMatch.Success
+                    .Should()
+                    .Be
+                    .True();
             }
         }
 
@@ -39,7 +46,7 @@ namespace lhm.net.tests.integration
         {
             Lhm.CleanUp(true);
 
-            var countArchiveTables = "SELECT COUNT(*) FROM information_schema.tables WHERE TABLE_NAME Like '%_lhm_%'";
+            var countArchiveTables = "SELECT COUNT(*) FROM information_schema.tables WHERE TABLE_NAME Like '%lhm_%'";
 
             Connection.ExecuteScalar<int>(countArchiveTables)
                 .Should()

@@ -5,6 +5,10 @@ using lhm.net.Throttler;
 
 namespace lhm.net
 {
+    /// <summary>
+    /// Copy from origin to destination in chunks of size `stride`.
+    /// Use the `throttler` class to sleep between each stride.
+    /// </summary>
     public class Chunker
     {
         private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
@@ -22,7 +26,7 @@ namespace lhm.net
 
         public void Run()
         {
-            var start = 0;
+            const int start = 0;
             var nextToInsert = start;
             var stride = _throttler.Stride;
 
@@ -46,6 +50,7 @@ namespace lhm.net
 
             Logger.Info($"Finsihed copying data from: {_migration.Origin.Name} to {_migration.Destination.Name} rows copied:{rowsAffected}");
         }
+
         private int Copy(int skip, int take)
         {
             var identityStatement = $"SET IDENTITY_INSERT [{_migration.Destination.Name}] ON";

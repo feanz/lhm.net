@@ -1,4 +1,5 @@
-﻿using lhm.net.Logging;
+﻿using System;
+using lhm.net.Logging;
 using lhm.net.Throttler;
 
 namespace lhm.net
@@ -13,26 +14,29 @@ namespace lhm.net
     {
         private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
 
+        private readonly Table _origin;
         private readonly ILhmConnection _connection;
-        private readonly Migrator _migrator;
+        private readonly string _dateTimeStamp;
 
         public Invoker(Table origin, ILhmConnection connection)
         {
+            _origin = origin;
             _connection = connection;
-            _migrator = new Migrator(origin, connection);
+            _dateTimeStamp = DateTime.UtcNow.ToString(Constants.DateTimeStampFormat);
+            Migrator = new Migrator(_origin, _connection);
         }
 
-        public Migrator Migrator
-        {
-            get { return _migrator; }
-        }
+        public Migrator Migrator { get; }
 
         public void Run(MigrationOptions options)
         {
-            Logger.Info($"Starting LHM run on table {_migrator.Source}");
+            Logger.Info($"Starting LHM run on table {_origin.Name}");
 
             options = ConfigureOptions(options);
 
+            var travelAgent = new Targeter(_origin, _connection, _dateTimeStamp);
+            travelAgent.Run();
+            
             var migration = Migrator.Run();
 
             var entangler = new Entangler(migration, _connection);
@@ -46,15 +50,11 @@ namespace lhm.net
                 var switcher = new AtomicSwitcher(migration, _connection);
                 switcher.Run();
             }
-            else
-            {
-                //todo create locking switcher
-            }
 
-            Logger.Info($"Finished LHM run on table {_migrator.Destination}");
+            Logger.Info($"Finished LHM run on table {_origin.DestinationName}");
         }
 
-        private MigrationOptions ConfigureOptions(MigrationOptions options)
+        private static MigrationOptions ConfigureOptions(MigrationOptions options)
         {
             if (options == null)
             {
@@ -69,7 +69,7 @@ namespace lhm.net
                 }
 
                 //use the default throttler todo create throttler factory
-                options.Throttler = new TimeThrottler(40000, 100);
+                options.Throttler = new TimeThrottler();
             }
 
             return options;

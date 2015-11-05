@@ -1,55 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace lhm.net
 {
     public class TableMigration
     {
-        private readonly Table _origin;
-        private readonly Table _destination;
-        private readonly string _dateTimeStamp;
-        private readonly List<RenameMap> _columnMappings;
-
-        public TableMigration(Table origin, Table destination, string dateTimeStamp = null, List<RenameMap> columnMappings = null)
+        public TableMigration(Table origin, Table destination, string dateTimeStamp = null, IEnumerable<RenameMap> renameMappings = null)
         {
-            _origin = origin;
-            _destination = destination;
-            _dateTimeStamp = dateTimeStamp ?? DateTime.UtcNow.ToString(Constants.DateTimeStampFormat);
-            _columnMappings = columnMappings ?? new List<RenameMap>();
+            Origin = origin;
+            Destination = destination;
+            DateTimeStamp = dateTimeStamp ?? DateTime.UtcNow.ToString(Constants.DateTimeStampFormat);
+            Intersection = new Intersection(Origin, Destination, renameMappings);
         }
 
-        public Table Origin
-        {
-            get { return _origin; }
-        }
+        public Table Origin { get; }
 
-        public Table Destination
-        {
-            get { return _destination; }
-        }
+        public Table Destination { get; }
 
-        public string ArchiveName
-        {
-            get { return $"{_origin.Name}_lhm_{_dateTimeStamp}"; }
-        }
+        public string ArchiveName => $"lhm_{DateTimeStamp}_{Origin.Name}".Truncate(128);
 
-        public string DateTimeStamp
-        {
-            get { return _dateTimeStamp; }
-        }
+        public string DateTimeStamp { get; }
 
-        public Intersection Intersection
-        {
-            get
-            {
-                if (_columnMappings.Any())
-                {
-                    return new Intersection(Origin, Destination, _columnMappings);
-                }
-                
-                return new Intersection(Origin, Destination);
-            }
-        }
+        public Intersection Intersection { get; }
     }
 }

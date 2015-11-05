@@ -57,7 +57,7 @@ namespace lhm.net
 
         public static void CleanUp(bool run = false)
         {
-            var tables = Connection.Query<string>("SELECT TABLE_NAME FROM information_schema.tables WHERE TABLE_NAME Like '%_lhm_%'")
+            var tables = Connection.Query<string>("SELECT TABLE_NAME FROM information_schema.tables WHERE TABLE_NAME Like '%lhm_%'")
                 .ToList();
 
             var triggers = Connection.Query<string>("SELECT sysobjects.name AS trigger_name FROM sysobjects WHERE sysobjects.type = 'TR' AND sysobjects.name like '%_lhm_%'")
