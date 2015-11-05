@@ -1,24 +1,33 @@
 using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
+using lhm.net.Logging;
 
 namespace lhm.net
 {
-    public class TravelAgent
+    /// <summary>
+    /// Alter the orgin tables DDL to allow it to be 
+    /// </summary>
+    public class Targeter
     {
+        private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
+        private readonly Table _origin;
         private readonly ILhmConnection _connection;
         private readonly string _dateTimeStamp;
         private string _buildScript;
 
-        public TravelAgent(Table origin, ILhmConnection connection, string dateTimeStamp)
+        public Targeter(Table origin, ILhmConnection connection, string dateTimeStamp)
         {
+            _origin = origin;
             _connection = connection;
             _dateTimeStamp = dateTimeStamp;
             _buildScript = origin.Ddl;
         }
 
-        public void PrepareDestination()
+        public void Run()
         {
+            Logger.Info($"Creating destination table:{_origin.DestinationName}");
+
             HandleCreateTable();
             HandlePrimaryKey();
             HandleAlterTable();
@@ -57,7 +66,7 @@ namespace lhm.net
             _buildScript = Regex.Replace(_buildScript, "ALTER TABLE \\[(.*?)\\].\\[(.*?)\\]", NewTableName);
         }
 
-        private static string NewTableName(Match m)
+        private string NewTableName(Match m)
         {
             if (m.Groups.Count < 3)
             {
@@ -67,7 +76,7 @@ namespace lhm.net
             var full = m.Groups[0].Value;
             var tableName = m.Groups[2].Value;
 
-            return full.Replace(tableName, $"{tableName}_lhm");
+            return full.Replace(tableName, _origin.DestinationName);
         }
 
         private string TableName(Match m)
@@ -80,13 +89,13 @@ namespace lhm.net
             var full = m.Groups[0].Value;
             var tableName = m.Groups[2].Value;
 
-            if (tableName.Contains("_lhm"))
+            if (tableName.Contains("lhm_"))
             {
-                var splitResult = Regex.Split(tableName, "_(.*)");
+                var splitResult = Regex.Split(tableName, "(.*)_");
                 return full.Replace(tableName, $"{splitResult[0]}");
             }
             
-            return full.Replace(tableName, string.Format("{0}", tableName));
+            return full;
         }
 
         private string MatchIndexKey(Match m)
@@ -107,19 +116,19 @@ namespace lhm.net
         private string CreateTimeStampedKey(string primaryKey)
         {
             var timeStampedKey = IsKeyAlreadyTimeStamped(primaryKey) ?
-                primaryKey.Remove(primaryKey.Length - Constants.DateTimeStampLength) + _dateTimeStamp :
+                primaryKey.Remove(primaryKey.Length - Constants.DateTimeStampFormat.Length) + _dateTimeStamp :
                 $"{primaryKey}_{_dateTimeStamp}";
             return timeStampedKey;
         }
 
         private static bool IsKeyAlreadyTimeStamped(string primaryKey)
         {
-            if (primaryKey.Length < Constants.DateTimeStampLength)
+            if (primaryKey.Length < Constants.DateTimeStampFormat.Length)
             {
                 return false;
             }
 
-            var dateTimeStamp = primaryKey.GetLast(Constants.DateTimeStampLength);
+            var dateTimeStamp = primaryKey.GetLast(Constants.DateTimeStampFormat.Length);
 
             DateTime temp;
             var provider = CultureInfo.InvariantCulture;

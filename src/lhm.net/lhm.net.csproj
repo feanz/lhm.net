@@ -78,7 +78,7 @@
     <Compile Include="TableMigration.cs" />
     <Compile Include="Throttler\IThrottler.cs" />
     <Compile Include="Throttler\TimeThrottler.cs" />
-    <Compile Include="TravelAgent.cs" />
+    <Compile Include="Targeter.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="TearDownSampleDatabase.sql">

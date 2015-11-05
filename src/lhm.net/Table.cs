@@ -8,44 +8,23 @@ namespace lhm.net
 {
     public class Table
     {
-        private readonly string _name;
-        private readonly string _pk;
-        private readonly string _ddl;
-
-        private readonly List<ColumnInfo> _columns;
-
         public Table(string name, string pk = "Id", List<ColumnInfo> columns = null, string ddl = null)
         {
-            _name = name;
-            _columns = columns ?? new List<ColumnInfo>();
-            _pk = pk;
-            _ddl = ddl;
+            Name = name;
+            PrimaryKey = pk;
+            Columns = columns ?? new List<ColumnInfo>();
+            Ddl = ddl;
         }
 
-        public string DestinationName
-        {
-            get { return string.Format("{0}_lhm", _name); }
-        }
+        public string DestinationName => $"lhm_{Name}";
 
-        public string Ddl
-        {
-            get { return _ddl; }
-        }
+        public string Ddl { get; }
 
-        public string Name
-        {
-            get { return _name; }
-        }
+        public string Name { get; }
 
-        public List<ColumnInfo> Columns
-        {
-            get { return _columns; }
-        }
+        public List<ColumnInfo> Columns { get; }
 
-        public string PrimaryKey
-        {
-            get { return _pk; }
-        }
+        public string PrimaryKey { get; }
 
         public static Table Parse(string tableName, ILhmConnection connection)
         {
