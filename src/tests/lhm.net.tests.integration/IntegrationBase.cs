@@ -49,5 +49,10 @@ namespace lhm.net.tests.integration
         {
             return Connection.ExecuteScalar<int>($"select count(*) from {tableName}");
         }
+
+        protected int Count(string table, string column, string value)
+        {
+            return Connection.ExecuteScalar<int>($"select count(*) from {table} where {column} = '{value}'");
+        }
     }
 }
