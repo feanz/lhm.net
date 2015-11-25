@@ -68,6 +68,7 @@ namespace lhm.net
                     INNER JOIN sys.tables table1
                     ON table1.object_id = fkc.parent_object_id
                     WHERE table1.name = '{_migration.ArchiveName}'";
+
             var foriegnKeys = _connection.Query<string>(sql).ToList();
 
             foriegnKeys.ForEach(fk =>
@@ -81,7 +82,7 @@ namespace lhm.net
         private static string CreateDropFKeys(List<FKeyInfo> fkeys)
         {
             string dropKeys = null;
-            fkeys.ForEach(fkey => { dropKeys += $"\nALTER TABLE [{fkey.FKTABLE_NAME}] DROP CONSTRAINT [{fkey.FK_NAME}]"; });
+            fkeys.ForEach(fkey => { dropKeys += $"\nALTER TABLE [{fkey.FKTable_Name}] DROP CONSTRAINT [{fkey.FK_Name}]"; });
             return dropKeys;
         }
         
@@ -90,8 +91,8 @@ namespace lhm.net
             string addKeys = null;
             fkeys.ForEach(fkey =>
             {
-                addKeys += "\n" + $@"ALTER TABLE [{fkey.FKTABLE_NAME}]  WITH CHECK ADD  CONSTRAINT [{fkey.FK_NAME}] FOREIGN KEY([{fkey.FKCOLUMN_NAME}])
-                                REFERENCES [{fkey.PKTABLE_NAME}] ([{fkey.PKCOLUMN_NAME}])";
+                addKeys += "\n" + $@"ALTER TABLE [{fkey.FKTable_Name}]  WITH CHECK ADD  CONSTRAINT [{fkey.FK_Name}] FOREIGN KEY([{fkey.FKColumn_Name}])
+                                REFERENCES [{fkey.PKTable_Name}] ([{fkey.PKColumn_Name}])";
             });
             return addKeys;
         }
