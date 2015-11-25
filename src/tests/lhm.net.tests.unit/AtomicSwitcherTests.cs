@@ -81,7 +81,7 @@ namespace lhm.net.tests.unit
             var sut = new AtomicSwitcher(new TableMigration(
                 new Table("origin"),
                 new Table("destination"),
-                "2015_01_01_01_01_01_111"), connection.Object);
+                new MigrationDateTimeStamp("2015_01_01_01_01_01_111")), connection.Object);
             return sut;
         }
     }

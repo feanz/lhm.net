@@ -77,7 +77,7 @@ namespace lhm.net.tests.unit
                     new ColumnInfo {Name = "info"},
                     new ColumnInfo {Name = "tags"}
                 }),
-                "2015_01_01_01_01_01_111"
+                new MigrationDateTimeStamp("2015_01_01_01_01_01_111")
                 ),
                 connection.Object);
             return sut;
