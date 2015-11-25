@@ -1,4 +1,4 @@
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
 namespace lhm.net.tests.unit
 {
@@ -8,6 +8,11 @@ namespace lhm.net.tests.unit
         {
             var result = Regex.Replace(value, @"\t|\n|\r|\s+", "");
             return result;
+        }
+
+        protected static bool EqualIgnoringWhiteSpace(string sql, string ddl)
+        {
+            return Strip(sql) == Strip(ddl);
         }
     }
 }

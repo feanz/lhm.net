@@ -3,14 +3,14 @@ namespace lhm.net
     public class FKeyInfo
     {
         //todo fix these names at some point
-        public string PKTABLE_NAME;
+        public string PKTable_Name { get; set; }
 
-        public string PKCOLUMN_NAME;
+        public string PKColumn_Name { get; set; }
 
-        public string FKTABLE_NAME { get; set; }
+        public string FKTable_Name { get; set; }
 
-        public string FKCOLUMN_NAME;
+        public string FKColumn_Name { get; set; }
 
-        public string FK_NAME { get; set; }
+        public string FK_Name { get; set; }
     }
 }

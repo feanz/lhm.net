@@ -66,6 +66,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AtomicSwitcherTests.cs" />
     <Compile Include="ChunkerTests.cs" />
     <Compile Include="EntanglerTests.cs" />
     <Compile Include="IntersectionTests.cs" />
