@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using lhm.net.Logging;
 
 namespace lhm.net
@@ -34,19 +35,19 @@ namespace lhm.net
 
             foreach (var entangle in Entanglers)
             {
-                _connection.Execute(entangle());
+                _connection.Execute(entangle);
             }
 
             Logger.Info($"Finished creating triggers between {_origin.Name} and {_destination.Name}");
         }
 
-        public IEnumerable<Func<string>> Entanglers
+        public IEnumerable<string> Entanglers
         {
             get
             {
-                yield return CreateInsertTrigger;
-                yield return CreateUpdateTrigger;
-                yield return CreateDeleteTrigger;
+                yield return Strip(CreateInsertTrigger());
+                yield return Strip(CreateUpdateTrigger());
+                yield return Strip(CreateDeleteTrigger());
             }
         }
 
@@ -86,6 +87,14 @@ namespace lhm.net
                         BEGIN
                             DELETE FROM [{_destination.Name}] WHERE {_destination.PrimaryKey} IN (SELECT {_destination.PrimaryKey} FROM DELETED)
                         END";
+        }
+
+        private string Strip(string value)
+        {
+            var removedTabsAndNewLines = Regex.Replace(value, @"\t|\n|\r", "");
+            var shrinkSpaces = Regex.Replace(removedTabsAndNewLines, @"\s+", " ");
+
+            return shrinkSpaces;
         }
     }
 }
