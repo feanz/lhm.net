@@ -17,7 +17,7 @@ namespace lhm.net
         private readonly Table _origin;
         private readonly Table _destination;
         private readonly Intersection _intersection;
-        private readonly string _timestamp;
+        private readonly MigrationDateTimeStamp _migrationDateTimeStamp;
 
         public Entangler(TableMigration migration, ILhmConnection connection)
         {
@@ -25,7 +25,7 @@ namespace lhm.net
             _intersection = migration.Intersection;
             _origin = migration.Origin;
             _destination = migration.Destination;
-            _timestamp = migration.DateTimeStamp;
+            _migrationDateTimeStamp = migration.MigrationDateTimeStamp;
         }
 
         public void Run()
@@ -52,7 +52,7 @@ namespace lhm.net
 
         private string CreateInsertTrigger()
         {
-            return $@"CREATE TRIGGER [{_origin.Name}_Insert_lhm_{_timestamp}] ON [{_origin.Name}] 
+            return $@"CREATE TRIGGER [{_origin.Name}_Insert_lhm_{_migrationDateTimeStamp}] ON [{_origin.Name}] 
                         AFTER INSERT 
                         AS 
                         BEGIN 
@@ -67,7 +67,7 @@ namespace lhm.net
                    .Select(info => $"[{_destination.Name}].[{info.DestinationColumns.Name}] = INSERTED.{info.OriginColumns.Name},"))
                    .TrimEnd(',');
 
-            return $@"CREATE TRIGGER [{_origin.Name}_Update_lhm_{_timestamp}] ON [{_origin.Name}] 
+            return $@"CREATE TRIGGER [{_origin.Name}_Update_lhm_{_migrationDateTimeStamp}] ON [{_origin.Name}] 
                         AFTER Update 
                         AS 
                         BEGIN 
@@ -80,7 +80,7 @@ namespace lhm.net
 
         private string CreateDeleteTrigger()
         {
-            return $@"CREATE TRIGGER [{_origin.Name}_Delete_lhm_{_timestamp}] ON [{_origin.Name}] 
+            return $@"CREATE TRIGGER [{_origin.Name}_Delete_lhm_{_migrationDateTimeStamp}] ON [{_origin.Name}] 
                         AFTER DELETE 
                         AS 
                         BEGIN

@@ -16,15 +16,15 @@ namespace lhm.net
         private readonly ILhmConnection _connection;
         private readonly List<string> _statements;
         private readonly List<RenameMap> _renameMaps;
-        private readonly string _dateTimeStamp;
+        private readonly MigrationDateTimeStamp _migrationDateTimeStamp;
 
-        public Migrator(Table origin, ILhmConnection connection = null, string dateTimeStamp = null)
+        public Migrator(Table origin, ILhmConnection connection = null, MigrationDateTimeStamp migrationDateTimeStamp = null)
         {
             _origin = origin;
             _connection = connection;
             _statements = new List<string>();
             _renameMaps = new List<RenameMap>();
-            _dateTimeStamp = dateTimeStamp ?? DateTime.UtcNow.ToString(Constants.DateTimeStampFormat);
+            _migrationDateTimeStamp = migrationDateTimeStamp ?? new MigrationDateTimeStamp();
         }
 
         public string Source => _origin.Name;
@@ -91,7 +91,7 @@ namespace lhm.net
                 transaction.Commit();
             }
 
-            return new TableMigration(_origin, ReadDestination(), _dateTimeStamp, _renameMaps);
+            return new TableMigration(_origin, ReadDestination(), _migrationDateTimeStamp, _renameMaps);
         }
 
         private Table ReadDestination()

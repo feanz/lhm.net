@@ -1,5 +1,3 @@
-using System;
-using System.Globalization;
 using System.Text.RegularExpressions;
 using lhm.net.Logging;
 
@@ -13,14 +11,14 @@ namespace lhm.net
         private static readonly ILog Logger = LogProvider.GetCurrentClassLogger();
         private readonly Table _origin;
         private readonly ILhmConnection _connection;
-        private readonly string _dateTimeStamp;
+        private readonly MigrationDateTimeStamp _migrationDateTimeStamp;
         private string _buildScript;
 
-        public Targeter(Table origin, ILhmConnection connection, string dateTimeStamp)
+        public Targeter(Table origin, ILhmConnection connection, MigrationDateTimeStamp migrationDateTimeStamp)
         {
             _origin = origin;
             _connection = connection;
-            _dateTimeStamp = dateTimeStamp;
+            _migrationDateTimeStamp = migrationDateTimeStamp;
             _buildScript = origin.Ddl;
         }
 
@@ -115,24 +113,7 @@ namespace lhm.net
 
         private string CreateTimeStampedKey(string primaryKey)
         {
-            var timeStampedKey = IsKeyAlreadyTimeStamped(primaryKey) ?
-                primaryKey.Remove(primaryKey.Length - Constants.DateTimeStampFormat.Length) + _dateTimeStamp :
-                $"{primaryKey}_{_dateTimeStamp}";
-            return timeStampedKey;
-        }
-
-        private static bool IsKeyAlreadyTimeStamped(string primaryKey)
-        {
-            if (primaryKey.Length < Constants.DateTimeStampFormat.Length)
-            {
-                return false;
-            }
-
-            var dateTimeStamp = primaryKey.GetLast(Constants.DateTimeStampFormat.Length);
-
-            DateTime temp;
-            var provider = CultureInfo.InvariantCulture;
-            return DateTime.TryParseExact(dateTimeStamp, Constants.DateTimeStampFormat, provider, DateTimeStyles.None, out temp);
+            return _migrationDateTimeStamp.Stamp(primaryKey);
         }
     }
 }

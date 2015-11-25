@@ -68,6 +68,7 @@
   <ItemGroup>
     <Compile Include="ChunkerTests.cs" />
     <Compile Include="IntersectionTests.cs" />
+    <Compile Include="MigrationDateTimeStampTests.cs" />
     <Compile Include="MigrationTests.cs" />
     <Compile Include="MigratorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

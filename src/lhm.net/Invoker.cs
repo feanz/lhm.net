@@ -1,6 +1,7 @@
-﻿using System;
+﻿using System.CodeDom.Compiler;
 using lhm.net.Logging;
 using lhm.net.Throttler;
+using Microsoft.SqlServer.Management.Common;
 
 namespace lhm.net
 {
@@ -16,14 +17,14 @@ namespace lhm.net
 
         private readonly Table _origin;
         private readonly ILhmConnection _connection;
-        private readonly string _dateTimeStamp;
+        private readonly MigrationDateTimeStamp _migrationDateTimeStamp;
 
         public Invoker(Table origin, ILhmConnection connection)
         {
             _origin = origin;
             _connection = connection;
-            _dateTimeStamp = DateTime.UtcNow.ToString(Constants.DateTimeStampFormat);
-            Migrator = new Migrator(_origin, _connection);
+            _migrationDateTimeStamp = new MigrationDateTimeStamp();
+            Migrator = new Migrator(_origin, _connection, _migrationDateTimeStamp);
         }
 
         public Migrator Migrator { get; }
@@ -34,7 +35,7 @@ namespace lhm.net
 
             options = ConfigureOptions(options);
 
-            var travelAgent = new Targeter(_origin, _connection, _dateTimeStamp);
+            var travelAgent = new Targeter(_origin, _connection, _migrationDateTimeStamp);
             travelAgent.Run();
             
             var migration = Migrator.Run();

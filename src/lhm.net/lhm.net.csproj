@@ -57,13 +57,13 @@
     <Compile Include="AtomicSwitcher.cs" />
     <Compile Include="Chunker.cs" />
     <Compile Include="ColumnInfo.cs" />
-    <Compile Include="Constants.cs" />
     <Compile Include="ColumnInfoMap.cs" />
     <Compile Include="FKeyInfo.cs" />
     <Compile Include="ILhmConnection.cs" />
     <Compile Include="IndexDef.cs" />
     <Compile Include="IndexOrder.cs" />
     <Compile Include="LhmConnection.cs" />
+    <Compile Include="MigrationDateTimeStamp.cs" />
     <Compile Include="RenameMap.cs" />
     <Compile Include="Entangler.cs" />
     <Compile Include="IndexInfo.cs" />
