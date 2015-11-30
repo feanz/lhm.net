@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lhm.net.tests.unit", "tests
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lhm.net.tests.integration", "tests\lhm.net.tests.integration\lhm.net.tests.integration.csproj", "{F7CCAABB-0320-4FCE-8E76-2DAC4281C7EC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "lhm.net.commands", "lhm.net.commands\lhm.net.commands.csproj", "{4DB2ACB3-5C16-4A3F-8C4B-661C5FC4E567}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +37,10 @@ Global
 		{F7CCAABB-0320-4FCE-8E76-2DAC4281C7EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F7CCAABB-0320-4FCE-8E76-2DAC4281C7EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F7CCAABB-0320-4FCE-8E76-2DAC4281C7EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4DB2ACB3-5C16-4A3F-8C4B-661C5FC4E567}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DB2ACB3-5C16-4A3F-8C4B-661C5FC4E567}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DB2ACB3-5C16-4A3F-8C4B-661C5FC4E567}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DB2ACB3-5C16-4A3F-8C4B-661C5FC4E567}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
