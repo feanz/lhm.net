@@ -26,6 +26,10 @@ without locking the table. This is done by copying table and using triggers.
 
 Lhm currently only works with MS SQL databases and currently needs to be plugged into an existing migration tool or ran as a custom tool.
 
+## Limitations
+
+Due to the Chunker implementation, Lhm requires that the table to migrate has an ordered single column primary key.
+
 ## Sample Database
 
 There is a [sql script](https://github.com/feanz/lhm.net/blob/develop/src/lhm.net/SampleDatabase.sql) in the main project to make a sammple DB. 
