@@ -65,7 +65,7 @@ namespace lhm.net
         private string CreateUpdateTrigger()
         {
             var updateDestinationColumns = string.Join("\n", _intersection.Common.Where(info => info.DestinationColumns.IsIdentity == false)
-                   .Select(info => $"[{_destination.Name}].[{info.DestinationColumns.Name}] = INSERTED.{info.OriginColumns.Name},"))
+                   .Select(info => $"[{_destination.Name}].[{info.DestinationColumns.Name}] = INSERTED.[{info.OriginColumns.Name}],"))
                    .TrimEnd(',');
 
             return $@"CREATE TRIGGER [{_origin.Name}_Update_lhm_{_migrationDateTimeStamp}] ON [{_origin.Name}] 

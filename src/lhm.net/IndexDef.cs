@@ -7,12 +7,12 @@
             ColumnName = columnName;
             Order = order;
         }
-        public string ColumnName { get; private set; }
-        public IndexOrder Order { get; private set; }
+        public string ColumnName { get; }
+        public IndexOrder Order { get; }
 
         public override string ToString()
         {
-            return string.Format("{0} {1}", ColumnName, Order);
+            return $"{ColumnName} {Order}";
         }
     }
 }
