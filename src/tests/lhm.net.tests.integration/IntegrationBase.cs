@@ -34,15 +34,27 @@ namespace lhm.net.tests.integration
                 //for some reason this still sometimes give you there is already an item called x
             }
 
+            return ReadTable(tableName);
+        }
+
+        protected Table ReadTable(string tableName)
+        {
             return Table.Parse(tableName, Connection);
         }
 
-        private string Fixture(string tableName)
+        protected bool TableExists(string tableName)
         {
-            var codeBaseUrl = new Uri(Assembly.GetExecutingAssembly().CodeBase);
-            var codeBasePath = Uri.UnescapeDataString(codeBaseUrl.AbsolutePath);
-            var dirPath = Path.GetDirectoryName(codeBasePath);
-            return File.ReadAllText(Path.Combine(dirPath, "Fixtures", $"{tableName}.sql"));
+            return Connection.ExecuteScalar<bool>($@"IF (EXISTS (SELECT * 
+                 FROM INFORMATION_SCHEMA.TABLES 
+                 WHERE TABLE_SCHEMA = 'dbo' 
+                 AND  TABLE_NAME = '{tableName}'))
+                    BEGIN
+                        select 1
+                    END
+                    ELSE
+                    BEGIN
+                        select 0
+                    END");
         }
 
         protected int CountAll(string tableName)
@@ -53,6 +65,14 @@ namespace lhm.net.tests.integration
         protected int Count(string table, string column, string value)
         {
             return Connection.ExecuteScalar<int>($"select count(*) from {table} where {column} = '{value}'");
+        }
+
+        private string Fixture(string tableName)
+        {
+            var codeBaseUrl = new Uri(Assembly.GetExecutingAssembly().CodeBase);
+            var codeBasePath = Uri.UnescapeDataString(codeBaseUrl.AbsolutePath);
+            var dirPath = Path.GetDirectoryName(codeBasePath);
+            return File.ReadAllText(Path.Combine(dirPath, "Fixtures", $"{tableName}.sql"));
         }
     }
 }

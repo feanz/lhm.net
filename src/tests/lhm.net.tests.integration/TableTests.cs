@@ -10,13 +10,13 @@ namespace lhm.net.tests.integration
 
         public TableTests()
         {
-            _table = CreateTable("users");
+            _table = CreateTable(Tables.Users);
         }
 
         [Fact]
         public void Should_parse_table_name()
         {
-            _table.Name.Should().Equal("users");
+            _table.Name.Should().Equal("Users");
         }
 
         [Fact]
