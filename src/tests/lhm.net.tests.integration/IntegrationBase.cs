@@ -11,7 +11,8 @@ namespace lhm.net.tests.integration
     public class IntegrationBase
     {
         protected static readonly string ConnectionString = ConfigurationManager.ConnectionStrings["TestDataBase"].ToString();
-        protected readonly ILhmConnection Connection = new LhmConnection(new SqlConnection(ConnectionString));
+
+        protected ILhmConnection Connection => new LhmConnection(new SqlConnection(ConnectionString));
 
         protected void Execute(string sql)
         {
