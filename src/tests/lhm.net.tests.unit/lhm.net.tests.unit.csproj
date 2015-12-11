@@ -70,6 +70,7 @@
     <Compile Include="ChunkerTests.cs" />
     <Compile Include="EntanglerTests.cs" />
     <Compile Include="IntersectionTests.cs" />
+    <Compile Include="LhmTests.cs" />
     <Compile Include="MigrationDateTimeStampTests.cs" />
     <Compile Include="MigrationTests.cs" />
     <Compile Include="MigratorTests.cs" />

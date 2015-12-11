@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Reflection.Emit;
 using lhm.net.Logging;
 using lhm.net.Throttler;
 
@@ -13,12 +14,7 @@ namespace lhm.net
         private static string _connectionString;
         private static ILhmConnection _connection;
 
-        private static IThrottler _defaultThrottler;
-
-        public static IThrottler Throttler
-        {
-            get { return _defaultThrottler; }
-        }
+        public static IThrottler Throttler { get; set; }
 
         static Lhm()
         {
@@ -28,11 +24,6 @@ namespace lhm.net
         public static void Setup(string connectionString)
         {
             _connectionString = connectionString;
-        }
-
-        public static void SetupThrottler(IThrottler throttler)
-        {
-            _defaultThrottler = throttler;
         }
 
         public static void ChangeTable(string tableName, Action<Migrator> configMigration,
