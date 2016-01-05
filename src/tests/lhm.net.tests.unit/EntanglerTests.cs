@@ -9,7 +9,7 @@ namespace lhm.net.tests.unit
     public class EntanglerTests : TestBase
     {
         [Fact]
-        public void Should_create_insert_trigger_to_desination_table()
+        public void Should_create_insert_trigger_to_destination_table()
         {
             var sut = CreateSut();
 
@@ -26,7 +26,7 @@ namespace lhm.net.tests.unit
         }
 
         [Fact]
-        public void Should_create_update_trigger_to_desination_table()
+        public void Should_create_update_trigger_to_destination_table()
         {
             var sut = CreateSut();
 
@@ -35,8 +35,8 @@ namespace lhm.net.tests.unit
                         AS 
 						BEGIN
                             Update [destination] SET
-						    [destination].[info] = INSERTED.info, 
-                            [destination].[tags] = INSERTED.tags
+						    [destination].[info] = INSERTED.[info], 
+                            [destination].[tags] = INSERTED.[tags]
                             FROM [destination]
                             INNER JOIN INSERTED ON [destination].[Id] = INSERTED.[Id]
                         END";
@@ -46,7 +46,7 @@ namespace lhm.net.tests.unit
         }
 
         [Fact]
-        public void Should_create_delete_trigger_to_desination_table()
+        public void Should_create_delete_trigger_to_destination_table()
         {
             var sut = CreateSut();
 

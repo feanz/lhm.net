@@ -45,8 +45,8 @@ namespace lhm.net
             }).ToList();
 
             intersect.AddRange(from renameMap in renameMaps
-                               let destColumn = _destination.Columns.Single(y => y.Name == renameMap.NewColumnName)
-                               let origColumn = _origin.Columns.Single(y => y.Name == renameMap.OldColumnName)
+                               let destColumn = _destination.Columns.Single(y => y.Name.ToLowerInvariant() == renameMap.NewColumnName.ToLowerInvariant())
+                               let origColumn = _origin.Columns.Single(y => y.Name.ToLowerInvariant() == renameMap.OldColumnName.ToLowerInvariant())
                                select new ColumnInfoMap(origColumn, destColumn));
 
             return intersect;

@@ -35,8 +35,8 @@ namespace lhm.net
 
             options = ConfigureOptions(options);
 
-            var travelAgent = new Targeter(_origin, _connection, _migrationDateTimeStamp);
-            travelAgent.Run();
+            var targeter = new Targeter(_origin, _connection, _migrationDateTimeStamp);
+            targeter.Run();
             
             var migration = Migrator.Run();
 

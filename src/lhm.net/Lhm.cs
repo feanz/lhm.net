@@ -39,6 +39,7 @@ namespace lhm.net
             catch (Exception ex)
             {
                 Logger.ErrorException(ex.Message, ex);
+                throw;
             }
             finally
             {
